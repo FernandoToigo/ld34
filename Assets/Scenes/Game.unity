@@ -560,10 +560,10 @@ ParticleSystem:
     rotation3D: 0
   ShapeModule:
     serializedVersion: 2
-    enabled: 0
+    enabled: 1
     type: 4
-    radius: 1
-    angle: 25
+    radius: 0.85688126
+    angle: 0
     length: 5
     boxX: 1
     boxY: 1
