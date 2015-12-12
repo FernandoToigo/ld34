@@ -27,7 +27,6 @@ GameObject:
   - 65: {fileID: 6590854}
   - 23: {fileID: 2372752}
   - 114: {fileID: 11428206}
-  - 120: {fileID: 12092440}
   m_Layer: 0
   m_Name: SignalSource
   m_TagString: Untagged
@@ -43,7 +42,7 @@ Transform:
   m_GameObject: {fileID: 182970}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .0500000007, y: .200000003, z: .200000003}
+  m_LocalScale: {x: .800000012, y: .100000001, z: .100000001}
   m_Children:
   - {fileID: 483404}
   m_Father: {fileID: 0}
@@ -117,47 +116,13 @@ MonoBehaviour:
   WorldMask:
     serializedVersion: 2
     m_Bits: 256
+  SignalTargetMask:
+    serializedVersion: 2
+    m_Bits: 1024
   MirrorMask:
     serializedVersion: 2
-    m_Bits: 0
-  ReflectionPrefab: {fileID: 0}
---- !u!120 &12092440
-LineRenderer:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 182970}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 975bc7892089eef4690c7492a628012c, type: 2}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
-  m_ProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
-  m_Parameters:
-    startWidth: .0500000007
-    endWidth: .0500000007
-    m_StartColor:
-      serializedVersion: 2
-      rgba: 4294967295
-    m_EndColor:
-      serializedVersion: 2
-      rgba: 4294967295
-  m_UseWorldSpace: 1
+    m_Bits: 512
+  ReflectionPrefab: {fileID: 135338, guid: d402034be65c9ee4488f235a55a342cb, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -212,6 +177,22 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: WorldMask.m_Bits
       value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: ReflectionPrefab
+      value: 
+      objectReference: {fileID: 135338, guid: d402034be65c9ee4488f235a55a342cb, type: 2}
+    - target: {fileID: 0}
+      propertyPath: MirrorMask.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: SignalTargetMask.m_Bits
+      value: 1024
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
