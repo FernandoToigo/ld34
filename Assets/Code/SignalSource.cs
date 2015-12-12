@@ -13,6 +13,7 @@ public class SignalSource : MonoBehaviour
     private GameObject _mainMirror;
     private GameObject _signalPos;
     private List<GameObject> _reflections;
+    private bool _transfering;
 
     private Signal _signal;
     public Signal Signal
@@ -35,14 +36,27 @@ public class SignalSource : MonoBehaviour
             GameObject.Destroy(reflection);
         _reflections.Clear();
 
-        CreateReflections(_signalPos.transform.position, (_mainMirror.transform.position - _signalPos.transform.position).normalized);
+        _transfering = false;
+
+        CreateReflections(_signalPos.transform.position, (_mainMirror.transform.position - _signalPos.transform.position).normalized, WorldMask);
+
+        if (_transfering)
+        {
+            _signal.TotalData -= Time.deltaTime;
+            if (_signal.TotalData <= 0.0f)
+            {
+                SignalCreator.Signals.Remove(_signal);
+                GameObject.Destroy(_signal.TargetGameObject);
+                GameObject.Destroy(this.gameObject);
+            }
+        }
     }
 
-    private void CreateReflections(Vector3 startPos, Vector3 direction)
+    private void CreateReflections(Vector3 startPos, Vector3 direction, LayerMask mask)
     {
         var dest = startPos + direction * 10.0f;
         RaycastHit hit;
-        if (!Physics.Linecast(startPos, dest, out hit, WorldMask | SignalTargetMask))
+        if (!Physics.Linecast(startPos, dest, out hit, mask))
         {
             if (Physics.Linecast(startPos, dest, out hit, MirrorMask))
             {
@@ -50,7 +64,7 @@ public class SignalSource : MonoBehaviour
 
                 var mirror = hit.collider.gameObject;
                 mirror.layer = LayerMask.NameToLayer("Default");
-                CreateReflections(hit.point, Vector3.Reflect(direction, mirror.transform.forward));
+                CreateReflections(hit.point, Vector3.Reflect(direction, mirror.transform.forward), WorldMask | SignalTargetMask);
                 mirror.layer = LayerMask.NameToLayer("Mirror");
             }
             else
@@ -61,12 +75,7 @@ public class SignalSource : MonoBehaviour
             AddReflection(startPos, hit.point);
 
             if (1 << hit.collider.gameObject.layer == SignalTargetMask && _signal.TargetGameObject == hit.collider.gameObject)
-            {
-                //_signal.TotalData -= Time.deltaTime;
-                SignalCreator.Signals.Remove(_signal);
-                GameObject.Destroy(hit.collider.gameObject);
-                GameObject.Destroy(this.gameObject);
-            }
+                _transfering = true;
         }
     }
 
@@ -76,6 +85,10 @@ public class SignalSource : MonoBehaviour
         var lineRenderer = reflection.GetComponent<LineRenderer>();
         lineRenderer.SetPosition(0, startPos);
         lineRenderer.SetPosition(1, endPos);
+        var size = (_signal.TotalData / Signal.MAX_DATA) * 0.05f;
+        lineRenderer.SetWidth(size, size);
+        lineRenderer.material.color = _signal.Color;
+
         reflection.transform.parent = gameObject.transform;
         _reflections.Add(reflection);
     }
