@@ -12,11 +12,20 @@ public class Satelite : MonoBehaviour {
     float _maxRotationSpeed = 30.0f;
 
     float _t = 0.0f;
+
+    ParticleSystem _rightTurbine;
+    ParticleSystem _leftTurbine;
+
     // Use this for initialization
     void Start ()
     {
         this.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -90.0f);
 
+        _rightTurbine = this.transform.FindChild("RightTurbine").GetComponent<ParticleSystem>();
+        _rightTurbine.Stop();
+
+        _leftTurbine = this.transform.FindChild("LeftTurbine").GetComponent<ParticleSystem>();
+        _leftTurbine.Stop();
     }
 
     // Update is called once per frame
@@ -30,11 +39,24 @@ public class Satelite : MonoBehaviour {
         if (leftArrowPressed && rightArrowPressed)
         {
             _translationSpeed += TranslationSpeedIncrement * Vector3.Dot(-this.transform.up, v0);
+            _rightTurbine.Play();
+            _leftTurbine.Play();
         }
         else if (leftArrowPressed)
+        {
             _rotationSpeed += RotationSpeedIncrement;
+            _leftTurbine.Play();
+        }
         else if (rightArrowPressed)
+        {
             _rotationSpeed -= RotationSpeedIncrement;
+            _rightTurbine.Play();
+        }
+        else
+        {
+            _rightTurbine.Stop();
+            _leftTurbine.Stop();
+        }
 
         _rotationSpeed = Mathf.Clamp(_rotationSpeed, -_maxRotationSpeed, _maxRotationSpeed);
 
