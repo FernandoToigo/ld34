@@ -17,20 +17,16 @@ public class SatelliteRelay : MonoBehaviour
     
     void Update()
     {
-        //_angle += 2.5f * Mathf.Deg2Rad * Time.deltaTime;
-
         if (Source == null || Target == null)
             return;
-        Debug.Log("source:" + Source.Angle);
-        var angle = Source.Angle + (Target.Angle - Source.Angle) * 0.5f;
-        var x = Mathf.Cos(angle) * 8.0f;
-        var y = Mathf.Sin(angle) * 8.0f;
 
-        transform.position = new Vector3(x, y, 0.0f);
+        _angleThing.Angle += Time.deltaTime * 5.0f * Mathf.Deg2Rad;
+        _angleThing.Direction = new Vector3(Mathf.Cos(_angleThing.Angle), Mathf.Sin(_angleThing.Angle), 0.0f);
+        transform.position = _angleThing.Direction * 6.0f;
+        //transform.position = Vector3.Normalize((Target.Direction + Source.Direction)) * 6.0f;
+        //var dir = ((Source.transform.position - transform.position) + (Target.transform.position - transform.position)) * 0.5f;
 
-        var dir = ((Source.transform.position - transform.position) + (Target.transform.position - transform.position)) * 0.5f;
-
-        transform.forward = dir;
-        //transform.forward = -transform.position
+        //transform.forward = dir;
+        // transform.forward = -transform.position;
     }
 }

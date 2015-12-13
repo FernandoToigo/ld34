@@ -3,13 +3,13 @@ using System.Collections;
 
 public class Satelite : MonoBehaviour {
 
-    float RotationSpeedIncrement = 0.1f;
+    float RotationSpeedIncrement = 0.01f;
     float TranslationSpeedIncrement = 0.005f;
 
     float _rotationSpeed = 0.0f;
     float _translationSpeed = 0.01f;
     float _maxTraslationSpeed = 1.0f;
-    float _maxRotationSpeed = 10.0f;
+    float _maxRotationSpeed = 5.0f;
     
     ParticleSystem _rightTurbine;
     ParticleSystem _leftTurbine;
@@ -45,13 +45,13 @@ public class Satelite : MonoBehaviour {
         }
         else if (leftArrowPressed)
         {
-            _rotationSpeed += RotationSpeedIncrement * Mathf.Abs((_translationSpeed / _maxTraslationSpeed));
+            _rotationSpeed += RotationSpeedIncrement;// * Mathf.Abs((_translationSpeed / _maxTraslationSpeed));
             _leftTurbine.Play();
             _rightTurbine.Stop();
         }
         else if (rightArrowPressed)
         {
-            _rotationSpeed -= RotationSpeedIncrement * Mathf.Abs((_translationSpeed / _maxTraslationSpeed));
+            _rotationSpeed -= RotationSpeedIncrement;//; * Mathf.Abs((_translationSpeed / _maxTraslationSpeed));
             _rightTurbine.Play();
             _leftTurbine.Stop();
         }
@@ -71,15 +71,15 @@ public class Satelite : MonoBehaviour {
 
         _angleThing.Angle += Time.deltaTime * _translationSpeed;
 
-        var x = Mathf.Cos(_angleThing.Angle) * 8.0f;
-        var y = Mathf.Sin(_angleThing.Angle) * 8.0f;
+        var x = Mathf.Cos(_angleThing.Angle) * 6.0f;
+        var y = Mathf.Sin(_angleThing.Angle) * 6.0f;
 
         this.transform.position = new Vector3(x, y, 0.0f);
-        
+        _angleThing.Direction = Vector3.Normalize(this.transform.position);
 
-        Debug.DrawLine(this.transform.position, this.transform.position - this.transform.up * 1.0f, Color.cyan);
-        Debug.DrawLine(this.transform.position, new Vector3(), Color.magenta);
-        Debug.DrawLine(this.transform.position, this.transform.position - v0, Color.green);
+        //Debug.DrawLine(this.transform.position, this.transform.position - this.transform.up * 1.0f, Color.cyan);
+        //Debug.DrawLine(this.transform.position, new Vector3(), Color.magenta);
+        //Debug.DrawLine(this.transform.position, this.transform.position - v0, Color.green);
 
     }
 }

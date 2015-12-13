@@ -64,6 +64,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &189654
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 498640}
+  m_Layer: 10
+  m_Name: SignalPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &197656
 GameObject:
   m_ObjectHideFlags: 1
@@ -103,6 +118,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 498640}
   - {fileID: 488772}
   - {fileID: 486102}
   m_Father: {fileID: 0}
@@ -131,7 +147,7 @@ Transform:
   m_Children:
   - {fileID: 421870}
   m_Father: {fileID: 432104}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!4 &488772
 Transform:
   m_ObjectHideFlags: 1
@@ -143,6 +159,18 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 483536}
+  m_Father: {fileID: 432104}
+  m_RootOrder: 1
+--- !u!4 &498640
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189654}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
   m_Father: {fileID: 432104}
   m_RootOrder: 0
 --- !u!23 &2306788
@@ -234,7 +262,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eda58d2f8ce08014487224952936a135, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Angle: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

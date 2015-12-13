@@ -7,6 +7,7 @@ public class SignalSource : MonoBehaviour
     public LayerMask WorldMask;
     public LayerMask SignalTargetMask;
     public LayerMask MirrorMask;
+    public LayerMask SatelliteRelayMask;
     public GameObject ReflectionPrefab;
 
     private GameObject _satellite;
@@ -46,7 +47,7 @@ public class SignalSource : MonoBehaviour
 
     private void CreateReflections(Vector3 startPos, Vector3 direction, LayerMask mask)
     {
-        var dest = startPos + direction * 10.0f;
+        var dest = startPos + direction * 50.0f;
         RaycastHit hit;
         if (!Physics.Linecast(startPos, dest, out hit, mask))
         {
@@ -58,6 +59,15 @@ public class SignalSource : MonoBehaviour
                 mirror.layer = LayerMask.NameToLayer("Default");
                 CreateReflections(hit.point, Vector3.Reflect(direction, mirror.transform.forward), WorldMask | SignalTargetMask);
                 mirror.layer = LayerMask.NameToLayer("Mirror");
+
+                var satelliteRelay = mirror.transform.parent.GetComponent<SatelliteRelay>();
+                if (satelliteRelay != null)
+                {
+                    var mirrorToTarget = (satelliteRelay.Target.transform.FindChild("SignalPos").position - mirror.transform.position).normalized;
+                    var mirrorToReflection = (-direction).normalized;
+                    
+                    satelliteRelay.transform.forward = (mirrorToTarget + mirrorToReflection).normalized;
+                }
             }
             else
                 AddReflection(startPos, dest);
@@ -77,10 +87,7 @@ public class SignalSource : MonoBehaviour
         var lineRenderer = reflection.GetComponent<LineRenderer>();
         lineRenderer.SetPosition(0, startPos);
         lineRenderer.SetPosition(1, endPos);
-        if (_signal == null)
-        {
 
-        }
 
         var size = (_signal.TotalData / Signal.MAX_DATA) * 0.05f;
         lineRenderer.SetWidth(size, size);
