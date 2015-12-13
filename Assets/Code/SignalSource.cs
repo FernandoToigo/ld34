@@ -48,6 +48,8 @@ public class SignalSource : MonoBehaviour
 
         if (_transfering)
             _signal.TotalData -= Time.deltaTime;
+        else
+            _signal.TotalData = Signal.MAX_DATA;
     }
 
     private void CreateReflections(Vector3 startPos, Vector3 direction, LayerMask mask)
