@@ -39,7 +39,7 @@ public class SignalSource : MonoBehaviour
 
         _transfering = false;
 
-        CreateReflections(_signalPos.transform.position, (_mainMirror.transform.position - _signalPos.transform.position).normalized, WorldMask);
+        CreateReflections(_signalPos.transform.position, (_mainMirror.transform.position - _signalPos.transform.position).normalized, WorldMask | MirrorMask);
 
         if (_transfering)
             _signal.TotalData -= Time.deltaTime;
@@ -49,36 +49,36 @@ public class SignalSource : MonoBehaviour
     {
         var dest = startPos + direction * 50.0f;
         RaycastHit hit;
-        if (!Physics.Linecast(startPos, dest, out hit, mask))
+        if (Physics.Linecast(startPos, dest, out hit, mask))
         {
-            if (Physics.Linecast(startPos, dest, out hit, MirrorMask))
-            {
-                AddReflection(startPos, hit.point);
+            AddReflection(startPos, hit.point);
 
+            if (1 << hit.collider.gameObject.layer == MirrorMask)
+            {
                 var mirror = hit.collider.gameObject;
-                mirror.layer = LayerMask.NameToLayer("Default");
-                CreateReflections(hit.point, Vector3.Reflect(direction, mirror.transform.forward), WorldMask | SignalTargetMask);
-                mirror.layer = LayerMask.NameToLayer("Mirror");
+                var reflectDir = Vector3.Reflect(direction, mirror.transform.forward);
+
+                if (Vector3.Dot(-direction, mirror.transform.forward) > 0.1f)
+                {
+                    mirror.layer = LayerMask.NameToLayer("Default");
+                    CreateReflections(hit.point, reflectDir, WorldMask | SignalTargetMask | MirrorMask);
+                    mirror.layer = LayerMask.NameToLayer("Mirror");
+                }
 
                 var satelliteRelay = mirror.transform.parent.GetComponent<SatelliteRelay>();
                 if (satelliteRelay != null)
                 {
                     var mirrorToTarget = (satelliteRelay.Target.transform.FindChild("SignalPos").position - mirror.transform.position).normalized;
                     var mirrorToReflection = (-direction).normalized;
-                    
+
                     satelliteRelay.transform.forward = (mirrorToTarget + mirrorToReflection).normalized;
                 }
             }
-            else
-                AddReflection(startPos, dest);
-        }
-        else
-        {
-            AddReflection(startPos, hit.point);
-
-            if (1 << hit.collider.gameObject.layer == SignalTargetMask && _signal.TargetGameObject == hit.collider.gameObject)
+            else if (1 << hit.collider.gameObject.layer == SignalTargetMask && _signal.TargetGameObject == hit.collider.gameObject)
                 _transfering = true;
         }
+        else
+            AddReflection(startPos, dest);
     }
 
     private void AddReflection(Vector3 startPos, Vector3 endPos)
