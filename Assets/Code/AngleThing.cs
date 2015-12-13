@@ -3,36 +3,29 @@ using System.Collections;
 
 public class AngleThing : MonoBehaviour
 {
-    private Vector3 direction;
+    private Vector3 _direction = Vector3.right;
     public Vector3 Direction
     {
-        get
-        {
-            return direction;
-        }
-
-        set
-        {
-            direction = value;
-        }
+        get { return _direction; }
     }
 
-    private float angle;
+    private float _angle;
     public float Angle
     {
         get
         {
-            return angle;
+            return _angle;
         }
-
         set
         {
-            angle = value;
+            _angle = value;
 
-            if (angle > 2.0f * Mathf.PI)
-                angle -= 2.0f * Mathf.PI;
-            else if (angle < 0)
-                angle += 2.0f * Mathf.PI;
+            if (_angle > 2.0f * Mathf.PI)
+                _angle -= 2.0f * Mathf.PI;
+            else if (_angle < 0)
+                _angle += 2.0f * Mathf.PI;
+
+            _direction = new Vector3(Mathf.Cos(_angle), Mathf.Sin(_angle), 0.0f);
         }
     }
 }

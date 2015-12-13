@@ -62,12 +62,7 @@ public class SignalSource : MonoBehaviour
 
                 var satelliteRelay = mirror.transform.parent.GetComponent<SatelliteRelay>();
                 if (satelliteRelay != null)
-                {
-                    var mirrorToTarget = (satelliteRelay.Target.transform.FindChild("SignalPos").position - mirror.transform.position).normalized;
-                    var mirrorToReflection = (-direction).normalized;
-                    
-                    satelliteRelay.transform.forward = (mirrorToTarget + mirrorToReflection).normalized;
-                }
+                    satelliteRelay.GetComponent<SatelliteRelay>().RotateToTarget(direction);
             }
             else
                 AddReflection(startPos, dest);
