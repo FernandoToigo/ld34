@@ -42,8 +42,8 @@ public class Satelite : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        bool leftArrowPressed = Input.GetKey(KeyCode.LeftArrow);
-        bool rightArrowPressed = Input.GetKey(KeyCode.RightArrow);
+        bool leftArrowPressed = Input.GetKey(KeyCode.RightArrow);
+        bool rightArrowPressed = Input.GetKey(KeyCode.LeftArrow);
 
         var v0 = Vector3.Normalize(Vector3.Cross(-this.transform.position, new Vector3(0.0f, 0.0f, 1.0f)));
 

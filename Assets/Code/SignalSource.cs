@@ -47,9 +47,24 @@ public class SignalSource : MonoBehaviour
         CreateReflections(_signalPos.transform.position, (_mainMirror.transform.position - _signalPos.transform.position).normalized, WorldMask | MirrorMask);
 
         if (_transfering)
+        {
+            if (_signal.TotalData == Signal.MAX_DATA)
+            {
+                var audio = GetComponent<AudioSource>();
+                if (!audio.isPlaying)
+                    audio.Play();
+
+                GetComponent<AudioSource>().Play();
+            }
+
             _signal.TotalData -= Time.deltaTime;
+        }
         else
+        {
+            var audio = GetComponent<AudioSource>();
+            audio.Stop();
             _signal.TotalData = Signal.MAX_DATA;
+        }
     }
 
     private void CreateReflections(Vector3 startPos, Vector3 direction, LayerMask mask)

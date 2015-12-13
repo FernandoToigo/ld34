@@ -25,13 +25,13 @@ public class SignalCreator : MonoBehaviour
 
     void Update()
     {
-        _newSignalTimer -= Time.deltaTime;
-
         if (_signals.Count < _maxConcurrentSignals)
         {
+            _newSignalTimer -= Time.deltaTime;
+
             if (_newSignalTimer <= 0.0f)
             {
-                _newSignalTimer += 10.0f;
+                _newSignalTimer += 3.0f;
 
                 var signal = CreateRandomSignal();
                 _signals.Add(signal);
@@ -111,6 +111,8 @@ public class SignalCreator : MonoBehaviour
             Quaternion.Euler(45.0f, 0.0f, 0.0f);
         targetPrefab.GetComponent<AppearFromGround>().Appear(targetPos.normalized, 1.0f);
         signal.TargetGameObject = targetPrefab;
+
+        GetComponent<AudioSource>().Play();
 
         if (_signalsRemovedCount >= 0)
         {
