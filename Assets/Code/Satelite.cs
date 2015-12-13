@@ -99,8 +99,6 @@ public class Satelite : MonoBehaviour {
         RotationSpeedIncrement = Mathf.Clamp(RotationSpeedIncrement, -0.1f, 0.1f);
         TranslationSpeedIncrement = Mathf.Clamp(TranslationSpeedIncrement, 0.0f, 0.01f);
 
-        Debug.Log("i :" + RotationSpeedIncrement + "r: " + _rotationSpeed);
-
         _translationSpeed += TranslationSpeedIncrement * Vector3.Dot(-this.transform.up, v0);
         _translationSpeed = Mathf.Clamp(_translationSpeed, -_maxTraslationSpeed, _maxTraslationSpeed);
         _rotationSpeed = Mathf.Clamp(_rotationSpeed + RotationSpeedIncrement, -_maxRotationSpeed, _maxRotationSpeed);

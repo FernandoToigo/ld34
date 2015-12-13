@@ -44,7 +44,7 @@ public class SignalSource : MonoBehaviour
 
         _transfering = false;
 
-        CreateReflections(_signalPos.transform.position, (_mainMirror.transform.position - _signalPos.transform.position).normalized, WorldMask | MirrorMask);
+        CreateReflections(_signalPos.transform.position, (_mainMirror.transform.position - _signalPos.transform.position).normalized, WorldMask | MirrorMask | SatelliteRelayMask);
 
         if (_transfering)
         {
@@ -83,21 +83,22 @@ public class SignalSource : MonoBehaviour
                 if (Vector3.Dot(-direction, mirror.transform.forward) > 0.1f)
                 {
                     mirror.layer = LayerMask.NameToLayer("Default");
-                    CreateReflections(hit.point, reflectDir, WorldMask | SignalTargetMask | MirrorMask);
+                    CreateReflections(hit.point, reflectDir, WorldMask | SignalTargetMask | MirrorMask | SatelliteRelayMask);
                     mirror.layer = LayerMask.NameToLayer("Mirror");
                 }
 
                 var satelliteRelay = mirror.transform.parent.GetComponent<SatelliteRelay>();
                 if (satelliteRelay != null)
-                {
-                    var mirrorToTarget = (satelliteRelay.Target.transform.FindChild("SignalPos").position - mirror.transform.position).normalized;
-                    var mirrorToReflection = (-direction).normalized;
-
-                    satelliteRelay.transform.forward = (mirrorToTarget + mirrorToReflection).normalized;
-                }
+                    satelliteRelay.RotateToTarget(direction);
             }
             else if (1 << hit.collider.gameObject.layer == SignalTargetMask && _signal.TargetGameObject == hit.collider.gameObject)
                 _transfering = true;
+            else if (1 << hit.collider.gameObject.layer == SatelliteRelayMask)
+            {
+                var satelliteRelay = hit.collider.transform.parent.GetComponent<SatelliteRelay>();
+                if (satelliteRelay != null)
+                    satelliteRelay.RotateToTarget(direction);
+            }
         }
         else
             AddReflection(startPos, dest);
