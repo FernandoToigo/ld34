@@ -165,7 +165,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
 --- !u!1 &614910358 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100006, guid: 2859eff3f1fe97349a3527f81c72288e, type: 3}
@@ -239,6 +239,10 @@ Prefab:
     - target: {fileID: 100006, guid: 2859eff3f1fe97349a3527f81c72288e, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: 2859eff3f1fe97349a3527f81c72288e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 2859eff3f1fe97349a3527f81c72288e, type: 3}
@@ -466,7 +470,7 @@ ParticleSystem:
   randomSeed: 0
   looping: 1
   prewarm: 1
-  playOnAwake: 1
+  playOnAwake: 0
   moveWithTransform: 1
   scalingMode: 1
   InitialModule:
@@ -1918,52 +1922,6 @@ ParticleSystem:
     subEmitterCollision1: {fileID: 0}
     subEmitterDeath: {fileID: 0}
     subEmitterDeath1: {fileID: 0}
---- !u!1001 &1204594329
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 432104, guid: 30841c97e79ed7d4f86b111943373f47, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 432104, guid: 30841c97e79ed7d4f86b111943373f47, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 432104, guid: 30841c97e79ed7d4f86b111943373f47, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 432104, guid: 30841c97e79ed7d4f86b111943373f47, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 432104, guid: 30841c97e79ed7d4f86b111943373f47, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 432104, guid: 30841c97e79ed7d4f86b111943373f47, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 432104, guid: 30841c97e79ed7d4f86b111943373f47, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 432104, guid: 30841c97e79ed7d4f86b111943373f47, type: 2}
-      propertyPath: m_RootOrder
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 189008, guid: 30841c97e79ed7d4f86b111943373f47, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 30841c97e79ed7d4f86b111943373f47, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1307950585
 GameObject:
   m_ObjectHideFlags: 0
@@ -2046,6 +2004,14 @@ Prefab:
     - target: {fileID: 100002, guid: eb722b5b9665b69448b4e5188aca2c4c, type: 3}
       propertyPath: m_Name
       value: Satellite_Model
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: eb722b5b9665b69448b4e5188aca2c4c, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: eb722b5b9665b69448b4e5188aca2c4c, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: eb722b5b9665b69448b4e5188aca2c4c, type: 3}
@@ -2171,7 +2137,7 @@ ParticleSystem:
   randomSeed: 0
   looping: 1
   prewarm: 1
-  playOnAwake: 1
+  playOnAwake: 0
   moveWithTransform: 1
   scalingMode: 1
   InitialModule:
@@ -3633,7 +3599,7 @@ GameObject:
   - 4: {fileID: 1776247007}
   - 114: {fileID: 1776247006}
   - 114: {fileID: 1776247008}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Satellite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3667,7 +3633,7 @@ Transform:
   - {fileID: 302828929}
   - {fileID: 1307950586}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
 --- !u!114 &1776247008
 MonoBehaviour:
   m_ObjectHideFlags: 0

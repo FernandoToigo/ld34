@@ -13,6 +13,7 @@ public class SignalSource : MonoBehaviour
     private GameObject _satellite;
     private GameObject _mainMirror;
     private GameObject _signalPos;
+    private AppearFromGround _appearingFromGround;
     private List<GameObject> _reflections;
     private bool _transfering;
 
@@ -28,6 +29,7 @@ public class SignalSource : MonoBehaviour
         _satellite = GameObject.Find("Satellite");
         _mainMirror = _satellite.transform.FindChild("Mirror").gameObject;
         _signalPos = transform.FindChild("SignalPos").gameObject;
+        _appearingFromGround = GetComponent<AppearFromGround>();
         _reflections = new List<GameObject>();
     }
 
@@ -36,6 +38,9 @@ public class SignalSource : MonoBehaviour
         foreach (var reflection in _reflections)
             GameObject.Destroy(reflection);
         _reflections.Clear();
+
+        if (_appearingFromGround.Appearing)
+            return;
 
         _transfering = false;
 

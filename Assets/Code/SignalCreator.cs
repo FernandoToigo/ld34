@@ -15,10 +15,12 @@ public class SignalCreator : MonoBehaviour
     private int _maxConcurrentSignals = 1;
     private float _maxAngleOffset = 45.0f * Mathf.Deg2Rad;
     private float _minAngleOffset = 10.0f * Mathf.Deg2Rad;
+    private static List<Signal> _toRemove = new List<Signal>();
 
     void Start()
     {
         _signals = new List<Signal>();
+        _toRemove = new List<Signal>();
     }
 
     void Update()
@@ -36,17 +38,29 @@ public class SignalCreator : MonoBehaviour
             }
         }
 
-        var toRemove = new List<Signal>();
         foreach (var signal in _signals)
         {
             if (signal.TotalData <= 0.0f)
             {
-                toRemove.Add(signal);
+                _toRemove.Add(signal);
+                signal.SourceGameObject.GetComponent<AppearFromGround>().Appear(-signal.SourceGameObject.transform.position.normalized, 1.0f);
+                signal.TargetGameObject.GetComponent<AppearFromGround>().Appear(-signal.TargetGameObject.transform.position.normalized, 1.0f);
+            }
+        }
+        
+        foreach (var signal in _toRemove.ToList())
+        {
+            _signals.Remove(signal);
+
+            if (!signal.SourceGameObject.GetComponent<AppearFromGround>().Appearing)
+            {
+                _toRemove.Remove(signal);
                 GameObject.Destroy(signal.SourceGameObject);
                 GameObject.Destroy(signal.TargetGameObject);
+
                 _signalsRemovedCount++;
 
-                if (_signalsRemovedCount == 1)
+                if (_signalsRemovedCount == 6)
                 {
                     _maxAngleOffset = 180.0f * Mathf.Deg2Rad;
                     _minAngleOffset = 90.0f * Mathf.Deg2Rad;
@@ -57,21 +71,17 @@ public class SignalCreator : MonoBehaviour
                     _maxAngleOffset = 90.0f * Mathf.Deg2Rad;
                     _minAngleOffset = 45.0f * Mathf.Deg2Rad;
                 }
-
-                Debug.Log(_signalsRemovedCount);
             }
         }
-
-        foreach (var signal in toRemove)
-            _signals.Remove(signal);
     }
+
 
     private Signal CreateRandomSignal()
     {
         var angleSource = Random.Range(0.0f, Mathf.PI * 2.0f);
         var offset = Random.Range(_minAngleOffset, _maxAngleOffset);
         offset *= Mathf.Sign(Random.Range(-1.0f, 1.0f));
-        //Debug.Log("Offset " + offset * Mathf.Rad2Deg);
+        Debug.Log("Offset " + offset * Mathf.Rad2Deg);
 
         var signal = new Signal
         {
@@ -81,14 +91,15 @@ public class SignalCreator : MonoBehaviour
             Color = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f))
         };
 
-        var sourcePos = new Vector3(Mathf.Cos(signal.AngleSource), Mathf.Sin(signal.AngleSource), 0.0f) * 3.8f;
-        var targetPos = new Vector3(Mathf.Cos(signal.AngleTarget), Mathf.Sin(signal.AngleTarget), 0.0f) * 3.8f;
+        var sourcePos = new Vector3(Mathf.Cos(signal.AngleSource), Mathf.Sin(signal.AngleSource), 0.0f) * 2.8f;
+        var targetPos = new Vector3(Mathf.Cos(signal.AngleTarget), Mathf.Sin(signal.AngleTarget), 0.0f) * 2.8f;
 
         var sourcePrefab = GameObject.Instantiate(SignalSourcePrefab);
         sourcePrefab.GetComponent<SignalSource>().Signal = signal;
         sourcePrefab.transform.FindChild("sender").transform.FindChild("default").GetComponent<MeshRenderer>().material.color = signal.Color;
         sourcePrefab.transform.position = sourcePos;
         sourcePrefab.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, signal.AngleSource * Mathf.Rad2Deg);
+        sourcePrefab.GetComponent<AppearFromGround>().Appear(sourcePos.normalized, 1.0f);
         signal.SourceGameObject = sourcePrefab;
 
         var targetPrefab = GameObject.Instantiate(SignalTargetPrefab);
@@ -99,6 +110,7 @@ public class SignalCreator : MonoBehaviour
         targetPrefab.transform.localRotation =
             Quaternion.Euler(0.0f, 0.0f, signal.AngleTarget * Mathf.Rad2Deg) *
             Quaternion.Euler(45.0f, 0.0f, 0.0f);
+        targetPrefab.GetComponent<AppearFromGround>().Appear(targetPos.normalized, 1.0f);
         signal.TargetGameObject = targetPrefab;
 
         if (_signalsRemovedCount >= 0)

@@ -17,9 +17,6 @@ public class SatelliteRelay : MonoBehaviour
     
     void Update()
     {
-        if (Source == null || Target == null)
-            return;
-
         _angleThing.Angle += Time.deltaTime * 5.0f * Mathf.Deg2Rad;
         _angleThing.Direction = new Vector3(Mathf.Cos(_angleThing.Angle), Mathf.Sin(_angleThing.Angle), 0.0f);
         transform.position = _angleThing.Direction * 6.0f;
