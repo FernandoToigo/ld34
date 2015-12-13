@@ -47,11 +47,13 @@ public class Satelite : MonoBehaviour {
         {
             _rotationSpeed += RotationSpeedIncrement;
             _leftTurbine.Play();
+            _rightTurbine.Stop();
         }
         else if (rightArrowPressed)
         {
             _rotationSpeed -= RotationSpeedIncrement;
             _rightTurbine.Play();
+            _leftTurbine.Stop();
         }
         else
         {
