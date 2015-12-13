@@ -104,7 +104,6 @@ public class SignalCreator : MonoBehaviour
 
         var targetPrefab = GameObject.Instantiate(SignalTargetPrefab);
         targetPrefab.GetComponent<AngleThing>().Angle = signal.AngleTarget;
-        targetPrefab.GetComponent<AngleThing>().Direction = Vector3.Normalize(targetPos);
         targetPrefab.transform.FindChild("receiver").transform.FindChild("default").GetComponent<MeshRenderer>().material.color = signal.Color;
         targetPrefab.transform.position = targetPos;
         targetPrefab.transform.localRotation =
