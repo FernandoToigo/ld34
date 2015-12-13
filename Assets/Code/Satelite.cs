@@ -3,13 +3,13 @@ using System.Collections;
 
 public class Satelite : MonoBehaviour {
 
-    float RotationSpeedIncrement = 0.05f;
+    float RotationSpeedIncrement = 0.1f;
     float TranslationSpeedIncrement = 0.005f;
 
     float _rotationSpeed = 0.0f;
     float _translationSpeed = 0.01f;
     float _maxTraslationSpeed = 1.0f;
-    float _maxRotationSpeed = 30.0f;
+    float _maxRotationSpeed = 10.0f;
     
     ParticleSystem _rightTurbine;
     ParticleSystem _leftTurbine;
@@ -45,13 +45,13 @@ public class Satelite : MonoBehaviour {
         }
         else if (leftArrowPressed)
         {
-            _rotationSpeed += RotationSpeedIncrement;
+            _rotationSpeed += RotationSpeedIncrement * Mathf.Abs((_translationSpeed / _maxTraslationSpeed));
             _leftTurbine.Play();
             _rightTurbine.Stop();
         }
         else if (rightArrowPressed)
         {
-            _rotationSpeed -= RotationSpeedIncrement;
+            _rotationSpeed -= RotationSpeedIncrement * Mathf.Abs((_translationSpeed / _maxTraslationSpeed));
             _rightTurbine.Play();
             _leftTurbine.Stop();
         }
@@ -61,12 +61,15 @@ public class Satelite : MonoBehaviour {
             _leftTurbine.Stop();
         }
 
+        _translationSpeed = Mathf.Clamp(_translationSpeed, -_maxTraslationSpeed, _maxTraslationSpeed);
         _rotationSpeed = Mathf.Clamp(_rotationSpeed, -_maxRotationSpeed, _maxRotationSpeed);
+        
+        Debug.Log("r:  " + _rotationSpeed + "; t%:  " + _translationSpeed / _maxTraslationSpeed);
 
         var eulerZ = this.transform.localRotation.eulerAngles.z;
         this.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, eulerZ + _rotationSpeed);
 
-        _angleThing.Angle += Time.deltaTime * Mathf.Clamp(_translationSpeed, -_maxTraslationSpeed, _maxTraslationSpeed);
+        _angleThing.Angle += Time.deltaTime * _translationSpeed;
 
         var x = Mathf.Cos(_angleThing.Angle) * 8.0f;
         var y = Mathf.Sin(_angleThing.Angle) * 8.0f;
