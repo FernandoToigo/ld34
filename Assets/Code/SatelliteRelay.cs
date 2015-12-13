@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Linq;
 
 public class SatelliteRelay : MonoBehaviour
 {
-    public AngleThing Source;
-    public AngleThing Target;
+    public GameObject _target;
 
     private AngleThing _angleThing;
     private Vector3 _targetForward;
@@ -19,6 +18,23 @@ public class SatelliteRelay : MonoBehaviour
 
     void Update()
     {
+        if (SignalCreator.Signals.Any())
+        {
+            var firstSignal = SignalCreator.Signals.First();
+            var nearestDistance = (firstSignal.TargetGameObject.transform.position - transform.position).magnitude;
+            _target = firstSignal.TargetGameObject;
+            foreach (var signal in SignalCreator.Signals.Skip(1))
+            {
+                var pos = signal.TargetGameObject.transform.position;
+                var dist = (pos - transform.position).magnitude;
+                if (dist < nearestDistance)
+                {
+                    nearestDistance = dist;
+                    _target = signal.TargetGameObject;
+                }
+            }
+        }
+
         if (_untargetTimer <= 0.0f)
             _targeting = false;
         else
@@ -40,10 +56,10 @@ public class SatelliteRelay : MonoBehaviour
             transform.forward = rotated;
     }
 
-    public void RotateToTarget(Vector3 direction)
+    public void RotateToTarget(Vector3 direction, Signal signal)
     {
         var mirror = transform.FindChild("Mirror");
-        var mirrorToTarget = (Target.transform.FindChild("SignalPos").position - mirror.transform.position).normalized;
+        var mirrorToTarget = (signal.TargetGameObject.transform.FindChild("SignalPos").position - mirror.transform.position).normalized;
         var mirrorToReflection = (-direction).normalized;
 
         _targetForward = (mirrorToTarget + mirrorToReflection).normalized;

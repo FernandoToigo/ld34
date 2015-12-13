@@ -8,6 +8,10 @@ public class SignalCreator : MonoBehaviour
     public GameObject SignalTargetPrefab;
 
     private static List<Signal> _signals;
+    public static List<Signal> Signals
+    {
+        get { return _signals; }
+    }
 
     private float _newSignalTimer;
 
@@ -64,18 +68,17 @@ public class SignalCreator : MonoBehaviour
                 {
                     _maxAngleOffset = 180.0f * Mathf.Deg2Rad;
                     _minAngleOffset = 90.0f * Mathf.Deg2Rad;
+                    _maxConcurrentSignals = 2;
                 }
                 else if (_signalsRemovedCount == 3)
                 {
-                    //_maxConcurrentSignals = 2;
                     _maxAngleOffset = 90.0f * Mathf.Deg2Rad;
                     _minAngleOffset = 45.0f * Mathf.Deg2Rad;
                 }
             }
         }
     }
-
-
+    
     private Signal CreateRandomSignal()
     {
         var angleSource = Random.Range(0.0f, Mathf.PI * 2.0f);
@@ -113,12 +116,6 @@ public class SignalCreator : MonoBehaviour
         signal.TargetGameObject = targetPrefab;
 
         GetComponent<AudioSource>().Play();
-
-        if (_signalsRemovedCount >= 0)
-        {
-            var firstRelay = GameObject.Find("FirstSatelliteRelay").GetComponent<SatelliteRelay>();
-            firstRelay.Target = signal.TargetGameObject.GetComponent<AngleThing>();
-        }
 
         return signal;
     }

@@ -89,7 +89,7 @@ public class SignalSource : MonoBehaviour
 
                 var satelliteRelay = mirror.transform.parent.GetComponent<SatelliteRelay>();
                 if (satelliteRelay != null)
-                    satelliteRelay.RotateToTarget(direction);
+                    satelliteRelay.RotateToTarget(direction, _signal);
             }
             else if (1 << hit.collider.gameObject.layer == SignalTargetMask && _signal.TargetGameObject == hit.collider.gameObject)
                 _transfering = true;
@@ -97,7 +97,7 @@ public class SignalSource : MonoBehaviour
             {
                 var satelliteRelay = hit.collider.transform.parent.GetComponent<SatelliteRelay>();
                 if (satelliteRelay != null)
-                    satelliteRelay.RotateToTarget(direction);
+                    satelliteRelay.RotateToTarget(direction, _signal);
             }
         }
         else
