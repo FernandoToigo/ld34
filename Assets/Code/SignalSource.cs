@@ -85,6 +85,11 @@ public class SignalSource : MonoBehaviour
         var lineRenderer = reflection.GetComponent<LineRenderer>();
         lineRenderer.SetPosition(0, startPos);
         lineRenderer.SetPosition(1, endPos);
+        if (_signal == null)
+        {
+
+        }
+
         var size = (_signal.TotalData / Signal.MAX_DATA) * 0.05f;
         lineRenderer.SetWidth(size, size);
         lineRenderer.material.color = _signal.Color;

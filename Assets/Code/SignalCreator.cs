@@ -44,22 +44,24 @@ public class SignalCreator : MonoBehaviour
             AngleTarget = angleSource + (-Mathf.PI * 0.125f + offset),
             TotalData = Signal.MAX_DATA,
             Color = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f))
-    };
+        };
 
-        var sourcePos = new Vector3(Mathf.Cos(signal.AngleSource), Mathf.Sin(signal.AngleSource), 0.0f) * 4.0f;
-        var targetPos = new Vector3(Mathf.Cos(signal.AngleTarget), Mathf.Sin(signal.AngleTarget), 0.0f) * 4.0f;
+        var sourcePos = new Vector3(Mathf.Cos(signal.AngleSource), Mathf.Sin(signal.AngleSource), 0.0f) * 3.8f;
+        var targetPos = new Vector3(Mathf.Cos(signal.AngleTarget), Mathf.Sin(signal.AngleTarget), 0.0f) * 3.8f;
 
         var sourcePrefab = GameObject.Instantiate(SignalSourcePrefab);
         sourcePrefab.GetComponent<SignalSource>().Signal = signal;
-        sourcePrefab.GetComponent<MeshRenderer>().material.color = signal.Color;
+        sourcePrefab.transform.FindChild("sender").transform.FindChild("default").GetComponent<MeshRenderer>().material.color = signal.Color;
         sourcePrefab.transform.position = sourcePos;
         sourcePrefab.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, signal.AngleSource * Mathf.Rad2Deg);
         signal.SourceGameObject = sourcePrefab;
 
         var targetPrefab = GameObject.Instantiate(SignalTargetPrefab);
-        targetPrefab.GetComponent<MeshRenderer>().material.color = signal.Color;
+        targetPrefab.transform.FindChild("receiver").transform.FindChild("default").GetComponent<MeshRenderer>().material.color = signal.Color;
         targetPrefab.transform.position = targetPos;
-        targetPrefab.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, signal.AngleTarget * Mathf.Rad2Deg);
+        targetPrefab.transform.localRotation = 
+            Quaternion.Euler(0.0f, 0.0f, signal.AngleTarget * Mathf.Rad2Deg) *
+            Quaternion.Euler(45.0f, 0.0f, 0.0f);
         signal.TargetGameObject = targetPrefab;
 
         return signal;

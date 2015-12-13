@@ -46,11 +46,13 @@ public class Satelite : MonoBehaviour {
         {
             _rotationSpeed += RotationSpeedIncrement;
             _leftTurbine.Play();
+            _rightTurbine.Stop();
         }
         else if (rightArrowPressed)
         {
             _rotationSpeed -= RotationSpeedIncrement;
             _rightTurbine.Play();
+            _leftTurbine.Stop();
         }
         else
         {
@@ -65,8 +67,8 @@ public class Satelite : MonoBehaviour {
 
         _t += Time.deltaTime * Mathf.Clamp(_translationSpeed, -_maxTraslationSpeed, _maxTraslationSpeed);
 
-        var x = Mathf.Cos(_t ) * 6;
-        var y = Mathf.Sin(_t) * 6;
+        var x = Mathf.Cos(_t ) * 8;
+        var y = Mathf.Sin(_t) * 8;
 
         this.transform.position = new Vector3(x, y, 0.0f);
         
