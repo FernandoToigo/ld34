@@ -10,15 +10,16 @@ public class Satelite : MonoBehaviour {
     float _translationSpeed = 0.01f;
     float _maxTraslationSpeed = 1.0f;
     float _maxRotationSpeed = 30.0f;
-
-    float _t = 0.0f;
-
+    
     ParticleSystem _rightTurbine;
     ParticleSystem _leftTurbine;
+    AngleThing _angleThing;
 
     // Use this for initialization
     void Start ()
     {
+        _angleThing = GetComponent<AngleThing>();
+
         this.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -90.0f);
 
         _rightTurbine = this.transform.FindChild("RightTurbine").GetComponent<ParticleSystem>();
@@ -63,10 +64,10 @@ public class Satelite : MonoBehaviour {
         var eulerZ = this.transform.localRotation.eulerAngles.z;
         this.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, eulerZ + _rotationSpeed);
 
-        _t += Time.deltaTime * Mathf.Clamp(_translationSpeed, -_maxTraslationSpeed, _maxTraslationSpeed);
+        _angleThing.Angle += Time.deltaTime * Mathf.Clamp(_translationSpeed, -_maxTraslationSpeed, _maxTraslationSpeed);
 
-        var x = Mathf.Cos(_t ) * 6;
-        var y = Mathf.Sin(_t) * 6;
+        var x = Mathf.Cos(_angleThing.Angle) * 8.0f;
+        var y = Mathf.Sin(_angleThing.Angle) * 8.0f;
 
         this.transform.position = new Vector3(x, y, 0.0f);
         

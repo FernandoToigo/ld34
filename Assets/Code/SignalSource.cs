@@ -41,15 +41,7 @@ public class SignalSource : MonoBehaviour
         CreateReflections(_signalPos.transform.position, (_mainMirror.transform.position - _signalPos.transform.position).normalized, WorldMask);
 
         if (_transfering)
-        {
             _signal.TotalData -= Time.deltaTime;
-            if (_signal.TotalData <= 0.0f)
-            {
-                SignalCreator.Signals.Remove(_signal);
-                GameObject.Destroy(_signal.TargetGameObject);
-                GameObject.Destroy(this.gameObject);
-            }
-        }
     }
 
     private void CreateReflections(Vector3 startPos, Vector3 direction, LayerMask mask)
