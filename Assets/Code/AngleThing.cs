@@ -3,5 +3,20 @@ using System.Collections;
 
 public class AngleThing : MonoBehaviour
 {
-    public float Angle;
+    private float angle;
+    public float Angle
+    {
+        get
+        {
+            return angle % Mathf.PI;
+        }
+
+        set
+        {
+            angle = value;
+
+            if (angle > 2.0f * Mathf.PI)
+                angle -= 2.0f * Mathf.PI;
+        }
+    }
 }
