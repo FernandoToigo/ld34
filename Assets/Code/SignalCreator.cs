@@ -6,6 +6,8 @@ public class SignalCreator : MonoBehaviour
 {
     public GameObject SignalSourcePrefab;
     public GameObject SignalTargetPrefab;
+    public AudioClip CallingClip;
+    public AudioClip EndClip;
 
     private static List<Signal> _signals;
     public static List<Signal> Signals
@@ -85,6 +87,10 @@ public class SignalCreator : MonoBehaviour
             var remove = false;
             if (signal.TotalData <= 0.0f)
             {
+                var audioSource = GetComponent<AudioSource>();
+                audioSource.volume = 0.3f;
+                audioSource.clip = EndClip;
+                audioSource.Play();
                 DataLog.LogStatic("transmission complete: " + signal.DataSize.ToString(".0") + " gigabytes transmitted", Color.green);
                 _dataTransmitted += signal.DataSize;
                 remove = true;
@@ -189,7 +195,9 @@ public class SignalCreator : MonoBehaviour
         targetPrefab.GetComponent<AppearFromGround>().Appear(targetPos.normalized, 1.0f);
         signal.TargetGameObject = targetPrefab;
 
-        GetComponent<AudioSource>().Play();
+        var audioSource = GetComponent<AudioSource>();
+        audioSource.volume = 0.8f;
+        audioSource.clip = CallingClip;
 
         DataLog.LogStatic("new transmission requested");
 
