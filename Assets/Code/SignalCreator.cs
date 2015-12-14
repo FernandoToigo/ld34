@@ -163,7 +163,7 @@ public class SignalCreator : MonoBehaviour
             AngleTarget = angleSource + offset,
             TotalData = Signal.MAX_DATA,
             Color = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f)),
-            LifeTime = Mathf.Min(60.0f, Mathf.Abs(offset * Mathf.Rad2Deg)) * _maxConcurrentSignals,
+            LifeTime = Mathf.Max(60.0f, Mathf.Abs(offset * Mathf.Rad2Deg)) * _maxConcurrentSignals,
             //LifeTime = 5.0f,
             DataSize = Random.Range(2.0f, 10.0f)
         };

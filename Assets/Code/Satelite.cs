@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Satelite : MonoBehaviour {
 
-    float RotationSpeedIncrement = 0.00f;
+    float RotationSpeedIncrement = 0.5f;
     float TranslationSpeedIncrement = 0.005f;
 
     float _rotationSpeed = 0.0f;
@@ -47,9 +47,12 @@ public class Satelite : MonoBehaviour {
 
         var v0 = Vector3.Normalize(Vector3.Cross(-this.transform.position, new Vector3(0.0f, 0.0f, 1.0f)));
 
+        var percentTranslation = Mathf.Abs(_translationSpeed) / _maxTraslationSpeed;
+        var trueRotationSpeed = RotationSpeedIncrement + percentTranslation;
+
         if (leftArrowPressed && rightArrowPressed)
         {
-            RotationSpeedIncrement = 0.00f;
+            //RotationSpeedIncrement = 0.00f;
             TranslationSpeedIncrement += 0.005f * Time.deltaTime;
             _rightTurbineThrusterAnimation.Play();
 
@@ -64,7 +67,8 @@ public class Satelite : MonoBehaviour {
         else if (leftArrowPressed)
         {
             TranslationSpeedIncrement = 0.0f;
-            RotationSpeedIncrement += 0.015f * Time.deltaTime;
+            _rotationSpeed = Mathf.Clamp(_rotationSpeed + trueRotationSpeed * Time.deltaTime, -_maxRotationSpeed, _maxRotationSpeed);
+            //RotationSpeedIncrement += 0.015f * Time.deltaTime;
             _leftTurbineThrusterAnimation.Play();
 
             if (!_leftTurbineThrusterSound.isPlaying)
@@ -76,8 +80,9 @@ public class Satelite : MonoBehaviour {
         else if (rightArrowPressed)
         {
             TranslationSpeedIncrement = 0.0f;
-            RotationSpeedIncrement -= 0.015f * Time.deltaTime;
-            
+            //RotationSpeedIncrement -= 0.015f * Time.deltaTime;
+            _rotationSpeed = Mathf.Clamp(_rotationSpeed - trueRotationSpeed * Time.deltaTime, -_maxRotationSpeed, _maxRotationSpeed);
+
             _rightTurbineThrusterAnimation.Play();
 
             if (!_rightTurbineThrusterSound.isPlaying)
@@ -92,17 +97,15 @@ public class Satelite : MonoBehaviour {
             _rightTurbineThrusterSound.Stop();
             _leftTurbineThrusterAnimation.Stop();
             _leftTurbineThrusterSound.Stop();
-            RotationSpeedIncrement = 0.00f;
             TranslationSpeedIncrement = 0.0f;
         }
 
-        RotationSpeedIncrement = Mathf.Clamp(RotationSpeedIncrement, -0.1f, 0.1f);
+        //RotationSpeedIncrement = Mathf.Clamp(RotationSpeedIncrement, -0.1f, 0.1f);
         TranslationSpeedIncrement = Mathf.Clamp(TranslationSpeedIncrement, 0.0f, 0.01f);
 
         _translationSpeed += TranslationSpeedIncrement * Vector3.Dot(-this.transform.up, v0);
         _translationSpeed = Mathf.Clamp(_translationSpeed, -_maxTraslationSpeed, _maxTraslationSpeed);
-        _rotationSpeed = Mathf.Clamp(_rotationSpeed + RotationSpeedIncrement, -_maxRotationSpeed, _maxRotationSpeed);
-        
+
         //Debug.Log("r:  " + _rotationSpeed + "; t%:  " + _translationSpeed / _maxTraslationSpeed);
 
         var eulerZ = this.transform.localRotation.eulerAngles.z;
