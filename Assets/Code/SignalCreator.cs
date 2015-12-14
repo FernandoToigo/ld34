@@ -6,6 +6,8 @@ public class SignalCreator : MonoBehaviour
 {
     public GameObject SignalSourcePrefab;
     public GameObject SignalTargetPrefab;
+    public AudioClip CallingClip;
+    public AudioClip EndClip;
 
     private static List<Signal> _signals;
 
@@ -42,6 +44,11 @@ public class SignalCreator : MonoBehaviour
         {
             if (signal.TotalData <= 0.0f)
             {
+                var audioSource = GetComponent<AudioSource>();
+                audioSource.volume = 0.3f;
+                audioSource.clip = EndClip;
+                audioSource.Play();
+
                 _toRemove.Add(signal);
                 signal.SourceGameObject.GetComponent<AppearFromGround>().Appear(-signal.SourceGameObject.transform.position.normalized, 1.0f);
                 signal.TargetGameObject.GetComponent<AppearFromGround>().Appear(-signal.TargetGameObject.transform.position.normalized, 1.0f);
@@ -112,7 +119,12 @@ public class SignalCreator : MonoBehaviour
         targetPrefab.GetComponent<AppearFromGround>().Appear(targetPos.normalized, 1.0f);
         signal.TargetGameObject = targetPrefab;
 
-        GetComponent<AudioSource>().Play();
+        var audioSource = GetComponent<AudioSource>();
+        audioSource.volume = 0.8f;
+        audioSource.clip = CallingClip;
+
+
+        audioSource.Play();
 
         if (_signalsRemovedCount >= 0)
         {

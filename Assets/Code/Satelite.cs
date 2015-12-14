@@ -42,8 +42,8 @@ public class Satelite : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        bool leftArrowPressed = Input.GetKey(KeyCode.RightArrow);
-        bool rightArrowPressed = Input.GetKey(KeyCode.LeftArrow);
+        bool leftArrowPressed = Input.GetKey(KeyCode.LeftArrow);
+        bool rightArrowPressed = Input.GetKey(KeyCode.RightArrow);
 
         var v0 = Vector3.Normalize(Vector3.Cross(-this.transform.position, new Vector3(0.0f, 0.0f, 1.0f)));
 
@@ -101,7 +101,9 @@ public class Satelite : MonoBehaviour {
 
         Debug.Log("i :" + RotationSpeedIncrement + "r: " + _rotationSpeed);
 
-        _translationSpeed += TranslationSpeedIncrement * Vector3.Dot(-this.transform.up, v0);
+        _translationSpeed += TranslationSpeedIncrement * Vector3.Dot(-Vector3.Normalize(this.transform.up), Vector3.Normalize(v0));
+        //_translationSpeed += TranslationSpeedIncrement * Vector3.Dot(-this.transform.up, v0);
+
         _translationSpeed = Mathf.Clamp(_translationSpeed, -_maxTraslationSpeed, _maxTraslationSpeed);
         _rotationSpeed = Mathf.Clamp(_rotationSpeed + RotationSpeedIncrement, -_maxRotationSpeed, _maxRotationSpeed);
         
