@@ -198,6 +198,7 @@ public class SignalCreator : MonoBehaviour
         var audioSource = GetComponent<AudioSource>();
         audioSource.volume = 0.8f;
         audioSource.clip = CallingClip;
+        audioSource.Play();
 
         DataLog.LogStatic("new transmission requested");
 
