@@ -59,7 +59,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 414510}
   - 65: {fileID: 6513950}
-  m_Layer: 8
+  m_Layer: 11
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -185,8 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2f8dab128a7bf649a6517330f0ba0fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Source: {fileID: 0}
-  Target: {fileID: 0}
+  _target: {fileID: 0}
 --- !u!114 &11456572
 MonoBehaviour:
   m_ObjectHideFlags: 1

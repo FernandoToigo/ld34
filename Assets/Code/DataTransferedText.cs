@@ -13,6 +13,6 @@ public class DataTransferedText : MonoBehaviour
 
     void Update()
     {
-        _text.text = SignalCreator.DataTransmitted.ToString(".0") + " gigabytes transmitted";
+        _text.text = string.Format("{0}/{1} gigabytes transmitted", LevelControl.DataTransmitted.ToString("0.#"), LevelControl.CurrentLevel.TotalData.ToString("0.#"));
     }
 }

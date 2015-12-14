@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class SignalCreator : MonoBehaviour
 {
+    private const float TIME_BETWEEN_SIGNALS = 20.0f;
+
     public GameObject SignalSourcePrefab;
     public GameObject SignalTargetPrefab;
     public AudioClip CallingClip;
@@ -15,65 +17,33 @@ public class SignalCreator : MonoBehaviour
         get { return _signals; }
     }
 
-    public const int MAX_LIFES = 3;
-
-    private static int _lifes = MAX_LIFES;
-    public static int Lifes
+    private static bool _createSignals = false;
+    public static bool CreateSignals
     {
-        get { return _lifes; }
-    }
-
-    private static float _dataTransmitted;
-    public static float DataTransmitted
-    {
-        get { return _dataTransmitted; }
+        get { return _createSignals; }
+        set { _createSignals = value; }
     }
 
     private float _newSignalTimer;
 
     private int _signalsRemovedCount = 0;
-    private int _maxConcurrentSignals = 1;
-    private float _maxAngleOffset = 45.0f * Mathf.Deg2Rad;
-    private float _minAngleOffset = 10.0f * Mathf.Deg2Rad;
     private static List<Signal> _toRemove = new List<Signal>();
-
-    private bool _gameEnded;
-    private float _gameEndedTimer;
 
     void Start()
     {
         _signals = new List<Signal>();
-        _lifes = MAX_LIFES;
         _toRemove = new List<Signal>();
-        _gameEndedTimer = 10.0f;
-        _dataTransmitted = 0.0f;
     }
 
     void Update()
     {
-        if (_gameEnded)
-        {
-            if (_gameEndedTimer > 8.0f && _gameEndedTimer - Time.deltaTime <= 8.0f)
-                DataLog.LogStatic("too many time outs", Color.red);
-
-            if (_gameEndedTimer > 5.0f && _gameEndedTimer - Time.deltaTime <= 5.0f)
-                DataLog.LogStatic("'congratulations!'", Color.red);
-
-            _gameEndedTimer -= Time.deltaTime;
-
-            if (_gameEndedTimer <= 0.0f)
-                Application.LoadLevel("Game");
-
-            return;
-        }
-
-        if (_signals.Count < _maxConcurrentSignals)
+        if (_createSignals && _signals.Count < LevelControl.CurrentLevel.MaxConcurrentSignals)
         {
             _newSignalTimer -= Time.deltaTime;
 
             if (_newSignalTimer <= 0.0f)
             {
-                _newSignalTimer += 3.0f;
+                _newSignalTimer += TIME_BETWEEN_SIGNALS;
 
                 var signal = CreateRandomSignal();
                 _signals.Add(signal);
@@ -88,22 +58,19 @@ public class SignalCreator : MonoBehaviour
             if (signal.TotalData <= 0.0f)
             {
                 var audioSource = GetComponent<AudioSource>();
-                audioSource.volume = 0.3f;
+                audioSource.volume = 0.15f;
                 audioSource.clip = EndClip;
                 audioSource.Play();
-                DataLog.LogStatic("transmission complete: " + signal.DataSize.ToString(".0") + " gigabytes transmitted", Color.green);
-                _dataTransmitted += signal.DataSize;
+                DataLog.LogStatic("transmission complete: " + signal.DataSize.ToString(".0") + " gigabytes transmitted", DataLog.SUCCESS_COLOR);
+                LevelControl.DataTransmitted += signal.DataSize;
                 remove = true;
             }
 
             if (signal.LifeTime <= 0.0f)
             {
-                _lifes--;
-                DataLog.LogStatic("transmission timed out", Color.red);
+                LevelControl.Lifes--;
+                DataLog.LogStatic("transmission timed out", DataLog.FAIL_COLOR);
                 remove = true;
-
-                if (_lifes <= 0)
-                    _gameEnded = true;
             }
 
             if (remove)
@@ -111,6 +78,9 @@ public class SignalCreator : MonoBehaviour
                 _toRemove.Add(signal);
                 signal.SourceGameObject.GetComponent<AppearFromGround>().Appear(-signal.SourceGameObject.transform.position.normalized, 1.0f);
                 signal.TargetGameObject.GetComponent<AppearFromGround>().Appear(-signal.TargetGameObject.transform.position.normalized, 1.0f);
+
+                if (_signals.Count == 1)
+                    _newSignalTimer = 3.0f;
             }
         }
 
@@ -125,33 +95,6 @@ public class SignalCreator : MonoBehaviour
                 GameObject.Destroy(signal.TargetGameObject);
 
                 _signalsRemovedCount++;
-
-                if (_signalsRemovedCount == 17)
-                {
-                    _maxAngleOffset = 180.0f * Mathf.Deg2Rad;
-                    _minAngleOffset = 90.0f * Mathf.Deg2Rad;
-                }
-                else if (_signalsRemovedCount == 13)
-                {
-                    _maxAngleOffset = 90.0f * Mathf.Deg2Rad;
-                    _minAngleOffset = 45.0f * Mathf.Deg2Rad;
-                }
-                else if (_signalsRemovedCount == 9)
-                {
-                    _maxAngleOffset = 45.0f * Mathf.Deg2Rad;
-                    _minAngleOffset = 10.0f * Mathf.Deg2Rad;
-                    _maxConcurrentSignals = 2;
-                }
-                else if (_signalsRemovedCount == 6)
-                {
-                    _maxAngleOffset = 180.0f * Mathf.Deg2Rad;
-                    _minAngleOffset = 90.0f * Mathf.Deg2Rad;
-                }
-                else if (_signalsRemovedCount == 3)
-                {
-                    _maxAngleOffset = 90.0f * Mathf.Deg2Rad;
-                    _minAngleOffset = 45.0f * Mathf.Deg2Rad;
-                }
             }
         }
     }
@@ -159,9 +102,8 @@ public class SignalCreator : MonoBehaviour
     private Signal CreateRandomSignal()
     {
         var angleSource = Random.Range(0.0f, Mathf.PI * 2.0f);
-        var offset = Random.Range(_minAngleOffset, _maxAngleOffset);
+        var offset = Random.Range(LevelControl.CurrentLevel.MinAngleDistance, LevelControl.CurrentLevel.MaxAngleDistance);
         offset *= Mathf.Sign(Random.Range(-1.0f, 1.0f));
-        //Debug.Log("Offset " + offset * Mathf.Rad2Deg);
 
         var signal = new Signal
         {
@@ -169,9 +111,9 @@ public class SignalCreator : MonoBehaviour
             AngleTarget = angleSource + offset,
             TotalData = Signal.MAX_DATA,
             Color = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f)),
-            LifeTime = Mathf.Max(60.0f, Mathf.Abs(offset * Mathf.Rad2Deg)) * _maxConcurrentSignals,
-            //LifeTime = 5.0f,
-            DataSize = Random.Range(2.0f, 10.0f)
+            LifeTime = Mathf.Max(60.0f, Mathf.Abs(offset * Mathf.Rad2Deg)) * LevelControl.CurrentLevel.MaxConcurrentSignals,
+            //LifeTime = 3.0f,
+            DataSize = Random.Range(6.0f, 10.0f) * LevelControl.CurrentLevel.Number
         };
 
         var sourcePos = new Vector3(Mathf.Cos(signal.AngleSource), Mathf.Sin(signal.AngleSource), 0.0f) * 2.8f;
@@ -189,20 +131,29 @@ public class SignalCreator : MonoBehaviour
         targetPrefab.GetComponent<AngleThing>().Angle = signal.AngleTarget;
         targetPrefab.transform.FindChild("receiver").transform.FindChild("default").GetComponent<MeshRenderer>().material.color = signal.Color;
         targetPrefab.transform.position = targetPos;
-        targetPrefab.transform.localRotation =
-            Quaternion.Euler(0.0f, 0.0f, signal.AngleTarget * Mathf.Rad2Deg) *
-            Quaternion.Euler(45.0f, 0.0f, 0.0f);
+        targetPrefab.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, signal.AngleTarget * Mathf.Rad2Deg);
+        //Quaternion.Euler(45.0f, 0.0f, 0.0f);
         targetPrefab.GetComponent<AppearFromGround>().Appear(targetPos.normalized, 1.0f);
         signal.TargetGameObject = targetPrefab;
 
         var audioSource = GetComponent<AudioSource>();
-        audioSource.volume = 0.8f;
+        audioSource.volume = 0.1f;
         audioSource.clip = CallingClip;
         audioSource.Play();
 
         DataLog.LogStatic("new transmission requested");
 
         return signal;
+    }
+
+    public static void CancelAllSignals()
+    {
+        foreach (var signal in _signals)
+        {
+            _toRemove.Add(signal);
+            signal.SourceGameObject.GetComponent<AppearFromGround>().Appear(-signal.SourceGameObject.transform.position.normalized, 1.0f);
+            signal.TargetGameObject.GetComponent<AppearFromGround>().Appear(-signal.TargetGameObject.transform.position.normalized, 1.0f);
+        }
     }
 }
 
