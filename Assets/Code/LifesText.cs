@@ -14,18 +14,20 @@ public class LifesText : MonoBehaviour
 
     void Update()
     {
-        var stringBuilder = new StringBuilder();
+        //var stringBuilder = new StringBuilder();
 
-        for (int i = 0; i < SignalCreator.Lifes; i++)
-        {
-            stringBuilder.Append("<color=#00FF00>:) </color>");
-        }
+        //for (int i = 0; i < LevelControl.Lifes; i++)
+        //{
+        //    stringBuilder.Append("<color=#00FF00>:) </color>");
+        //}
 
-        for (int i = 0; i < SignalCreator.MAX_LIFES - SignalCreator.Lifes; i++)
-        {
-            stringBuilder.Append("<color=#FF0000>:( </color>");
-        }
+        //for (int i = 0; i < LevelControl.MAX_LIFES - LevelControl.Lifes; i++)
+        //{
+        //    stringBuilder.Append("<color=#FF0000>:( </color>");
+        //}
 
-        _text.text = stringBuilder.ToString();
+        //_text.text = stringBuilder.ToString();
+
+        _text.text = string.Format("{0}/{1} timeouts", LevelControl.MAX_LIFES - LevelControl.Lifes, LevelControl.MAX_LIFES);
     }
 }

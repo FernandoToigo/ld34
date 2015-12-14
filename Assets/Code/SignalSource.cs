@@ -74,7 +74,7 @@ public class SignalSource : MonoBehaviour
             {
                 audio.Stop();
                 _signal.TotalData = Signal.MAX_DATA;
-                DataLog.LogStatic("signal lost", Color.red);
+                DataLog.LogStatic("signal lost", DataLog.FAIL_COLOR);
             }
         }
     }

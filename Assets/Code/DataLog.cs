@@ -5,54 +5,23 @@ using UnityEngine.UI;
 
 public class DataLog : MonoBehaviour
 {
+    public static readonly Color SUCCESS_COLOR = new Color(0.4313f, 1.0f, 0.4313f, 1.0f);
+    public static readonly Color FAIL_COLOR = new Color(1.0f, 0.4313f, 0.4313f, 1.0f);
+
     private const int MAX_LOGS = 6;
 
     public GameObject LogPrefab;
 
     private List<Data> _data;
-    private const float TOTAL_LETTERS_TIMER = 0.05f;
-    private const float TOTAL_BLINK_TIMER = 0.5f;
-    private float _lettersTimer;
-    private float _blinkTimer;
-    private bool _underline;
-    private string _currentEnd = " ";
+    private CommandTextWriter _writer;
 
     void Start()
     {
+        _writer = GetComponent<CommandTextWriter>();
         _data = new List<Data>();
-        Log("system initialized...", Color.green);
+        Log("system initialized...", DataLog.SUCCESS_COLOR);
     }
-
-    void Update()
-    {
-        if (_blinkTimer > 0.0f)
-            _blinkTimer -= Time.deltaTime;
-        else
-        {
-            _blinkTimer += TOTAL_BLINK_TIMER;
-
-            var d = _data.First();
-            _currentEnd = (_underline ? " " : "_");
-            d.Text.text = d.Text.text.Substring(0, d.Text.text.Length - 1) + _currentEnd;
-            _underline = !_underline;
-        }
-
-        if (_lettersTimer > 0.0f)
-        {
-            _lettersTimer -= Time.deltaTime;
-            return;
-        }
-
-        _lettersTimer += TOTAL_LETTERS_TIMER;
-
-        var data = _data.First();
-        var currLength = data.Text.text.Length - 1;
-        if (currLength == data.Value.Length)
-            data.Text.text = data.Value + _currentEnd;
-        else
-            data.Text.text = data.Value.Substring(0, currLength + 1) + "_";
-    }
-
+    
     public static void LogStatic(string value)
     {
         GameObject.Find("Canvas").transform.FindChild("Panel").GetComponent<DataLog>().Log(value, new Color(1.0f, 1.0f, 1.0f, 1.0f));
@@ -77,11 +46,10 @@ public class DataLog : MonoBehaviour
 
         var textObject = GameObject.Instantiate(LogPrefab);
         var text = textObject.GetComponent<Text>();
-        text.text = _currentEnd;
         text.color = color;
         text.rectTransform.SetParent(GetComponent<Image>().rectTransform, false);
         _data.Insert(0, new Data(value, text.GetComponent<Text>(), color));
-
+        _writer.WriteText(value, text);
         for (int i = MAX_LOGS; i < _data.Count; i++)
         {
             var data = _data[i];

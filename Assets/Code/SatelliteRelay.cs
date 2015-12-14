@@ -4,6 +4,7 @@ using System.Linq;
 public class SatelliteRelay : MonoBehaviour
 {
     public GameObject _target;
+    public float _startingAngle;
 
     private AngleThing _angleThing;
     private Vector3 _targetForward;
@@ -13,6 +14,7 @@ public class SatelliteRelay : MonoBehaviour
     void Start()
     {
         _angleThing = GetComponent<AngleThing>();
+        _angleThing.Angle = _startingAngle * Mathf.Deg2Rad;
         _untargetTimer = 0.0f;
     }
 
