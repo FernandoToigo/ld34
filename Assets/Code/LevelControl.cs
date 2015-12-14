@@ -36,6 +36,7 @@ public class LevelControl : MonoBehaviour
     private float _timer = 0.0f;
     private bool _starting = false;
     private bool _ending = false;
+    private bool _deathing = false;
     private bool _gameEnded = false;
 
     void Start()
@@ -107,6 +108,11 @@ public class LevelControl : MonoBehaviour
     {
         _animator.Update();
 
+        if (!_deathing && LevelControl.Lifes <= 0)
+        {
+            ShowDeath();
+        }
+
         if (!_ending && _dataTransmitted >= _currentLevel.TotalData)
         {
             EndLevel();
@@ -154,6 +160,19 @@ public class LevelControl : MonoBehaviour
                         EndGame();
                     else
                         StartLevel(_levels[nextIndex]);
+                }
+            }
+        }
+
+        if (_deathing)
+        {
+            if (_timer > 0.0f)
+            {
+                _timer -= Time.deltaTime;
+                if (_timer <= 0.0f)
+                {
+                    _deathing = false;
+                    StartLevel(_currentLevel);
                 }
             }
         }
@@ -245,6 +264,35 @@ public class LevelControl : MonoBehaviour
             new CommandTextWriter.ColorIndex("6EFF6EFF", text.Length - 23, 23)
         };
         _writer.WriteText(text, _levelText, colors, new List<CommandTextWriter.SizeIndex>());
+    }
+
+    public void ShowDeath()
+    {
+        SignalCreator.CancelAllSignals();
+        SignalCreator.CreateSignals = false;
+        _deathing = true;
+
+        _animator.Animate(new FloatAnimation(
+            0.0f,
+            0.74f,
+            3000,
+            alpha =>
+            {
+                _fadePanel.color = new Color(0.0f, 0.0f, 0.0f, alpha);
+            },
+            () =>
+            {
+                var text = "too many timeouts";
+                var colors = new List<CommandTextWriter.ColorIndex>
+                {
+                    new CommandTextWriter.ColorIndex("FF6E6EFF", 0, text.Length)
+                };
+                _writer.WriteText(text, _levelText, colors, new List<CommandTextWriter.SizeIndex>());
+            },
+            FloatAnimation.EaseOutQuint));
+
+        _timer = 8.0f;
+        _levelText.text = "";
     }
 
     public class Level

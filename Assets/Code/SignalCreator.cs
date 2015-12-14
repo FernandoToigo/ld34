@@ -29,34 +29,14 @@ public class SignalCreator : MonoBehaviour
     private int _signalsRemovedCount = 0;
     private static List<Signal> _toRemove = new List<Signal>();
 
-    private bool _gameEnded;
-    private float _gameEndedTimer;
-
     void Start()
     {
         _signals = new List<Signal>();
         _toRemove = new List<Signal>();
-        _gameEndedTimer = 10.0f;
     }
 
     void Update()
     {
-        if (_gameEnded)
-        {
-            if (_gameEndedTimer > 8.0f && _gameEndedTimer - Time.deltaTime <= 8.0f)
-                DataLog.LogStatic("too many time outs", DataLog.SUCCESS_COLOR);
-
-            if (_gameEndedTimer > 5.0f && _gameEndedTimer - Time.deltaTime <= 5.0f)
-                DataLog.LogStatic("'congratulations!'", DataLog.SUCCESS_COLOR);
-
-            _gameEndedTimer -= Time.deltaTime;
-
-            if (_gameEndedTimer <= 0.0f)
-                Application.LoadLevel("Game");
-
-            return;
-        }
-
         if (_createSignals && _signals.Count < LevelControl.CurrentLevel.MaxConcurrentSignals)
         {
             _newSignalTimer -= Time.deltaTime;
@@ -91,9 +71,6 @@ public class SignalCreator : MonoBehaviour
                 LevelControl.Lifes--;
                 DataLog.LogStatic("transmission timed out", DataLog.FAIL_COLOR);
                 remove = true;
-
-                if (LevelControl.Lifes <= 0)
-                    _gameEnded = true;
             }
 
             if (remove)
@@ -134,7 +111,8 @@ public class SignalCreator : MonoBehaviour
             AngleTarget = angleSource + offset,
             TotalData = Signal.MAX_DATA,
             Color = new Color(Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f), Random.Range(0.0f, 1.0f)),
-            LifeTime = Mathf.Max(60.0f, Mathf.Abs(offset * Mathf.Rad2Deg)) * LevelControl.CurrentLevel.MaxConcurrentSignals,
+            //LifeTime = Mathf.Max(60.0f, Mathf.Abs(offset * Mathf.Rad2Deg)) * LevelControl.CurrentLevel.MaxConcurrentSignals,
+            LifeTime = 3.0f,
             DataSize = Random.Range(6.0f, 10.0f) * LevelControl.CurrentLevel.Number
         };
 
