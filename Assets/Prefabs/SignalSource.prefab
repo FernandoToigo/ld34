@@ -379,7 +379,7 @@ MonoBehaviour:
     m_Bits: 512
   SatelliteRelayMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 2048
   ReflectionPrefab: {fileID: 135338, guid: d402034be65c9ee4488f235a55a342cb, type: 2}
 --- !u!114 &11486190
 MonoBehaviour:
@@ -2022,6 +2022,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_PlayOnAwake
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: SatelliteRelayMask.m_Bits
+      value: 2048
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

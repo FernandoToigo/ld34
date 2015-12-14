@@ -18,7 +18,7 @@ public class Satelite : MonoBehaviour {
     AngleThing _angleThing;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         _angleThing = GetComponent<AngleThing>();
 
@@ -40,7 +40,7 @@ public class Satelite : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
         bool leftArrowPressed = Input.GetKey(KeyCode.LeftArrow);
         bool rightArrowPressed = Input.GetKey(KeyCode.RightArrow);
@@ -98,8 +98,6 @@ public class Satelite : MonoBehaviour {
 
         RotationSpeedIncrement = Mathf.Clamp(RotationSpeedIncrement, -0.1f, 0.1f);
         TranslationSpeedIncrement = Mathf.Clamp(TranslationSpeedIncrement, 0.0f, 0.01f);
-
-        Debug.Log("i :" + RotationSpeedIncrement + "r: " + _rotationSpeed);
 
         _translationSpeed += TranslationSpeedIncrement * Vector3.Dot(-Vector3.Normalize(this.transform.up), Vector3.Normalize(v0));
         //_translationSpeed += TranslationSpeedIncrement * Vector3.Dot(-this.transform.up, v0);
