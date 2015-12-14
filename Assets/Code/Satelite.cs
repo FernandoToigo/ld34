@@ -18,7 +18,7 @@ public class Satelite : MonoBehaviour {
     AngleThing _angleThing;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         _angleThing = GetComponent<AngleThing>();
 
@@ -40,7 +40,7 @@ public class Satelite : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update ()
+    void Update()
     {
         bool leftArrowPressed = Input.GetKey(KeyCode.LeftArrow);
         bool rightArrowPressed = Input.GetKey(KeyCode.RightArrow);

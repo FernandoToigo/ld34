@@ -54,16 +54,28 @@ public class SignalSource : MonoBehaviour
                 if (!audio.isPlaying)
                     audio.Play();
 
+                DataLog.LogStatic("transmiting data...");
+                DataLog.LogStatic("0%...");
+
                 GetComponent<AudioSource>().Play();
             }
 
+            var oldData = (int)((_signal.TotalData / Signal.MAX_DATA) * 100.0f);
             _signal.TotalData -= Time.deltaTime;
+            var newData = (int)((_signal.TotalData / Signal.MAX_DATA) * 100.0f);
+
+            if (oldData / 20 != newData / 20)
+                DataLog.LogStatic(100 - (newData / 20) * 20 + "%...");
         }
         else
         {
             var audio = GetComponent<AudioSource>();
-            audio.Stop();
-            _signal.TotalData = Signal.MAX_DATA;
+            if (audio.isPlaying)
+            {
+                audio.Stop();
+                _signal.TotalData = Signal.MAX_DATA;
+                DataLog.LogStatic("signal lost", Color.red);
+            }
         }
     }
 
