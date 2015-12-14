@@ -88,7 +88,7 @@ public class SignalCreator : MonoBehaviour
             if (signal.TotalData <= 0.0f)
             {
                 var audioSource = GetComponent<AudioSource>();
-                audioSource.volume = 0.3f;
+                audioSource.volume = 0.15f;
                 audioSource.clip = EndClip;
                 audioSource.Play();
                 DataLog.LogStatic("transmission complete: " + signal.DataSize.ToString(".0") + " gigabytes transmitted", Color.green);
@@ -189,14 +189,13 @@ public class SignalCreator : MonoBehaviour
         targetPrefab.GetComponent<AngleThing>().Angle = signal.AngleTarget;
         targetPrefab.transform.FindChild("receiver").transform.FindChild("default").GetComponent<MeshRenderer>().material.color = signal.Color;
         targetPrefab.transform.position = targetPos;
-        targetPrefab.transform.localRotation =
-            Quaternion.Euler(0.0f, 0.0f, signal.AngleTarget * Mathf.Rad2Deg) *
-            Quaternion.Euler(45.0f, 0.0f, 0.0f);
+        targetPrefab.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, signal.AngleTarget * Mathf.Rad2Deg);
+        //Quaternion.Euler(45.0f, 0.0f, 0.0f);
         targetPrefab.GetComponent<AppearFromGround>().Appear(targetPos.normalized, 1.0f);
         signal.TargetGameObject = targetPrefab;
 
         var audioSource = GetComponent<AudioSource>();
-        audioSource.volume = 0.8f;
+        audioSource.volume = 0.1f;
         audioSource.clip = CallingClip;
         audioSource.Play();
 
