@@ -30,7 +30,7 @@ public class Plane : MonoBehaviour {
 
         this.transform.localRotation = Quaternion.LookRotation(forward, up);
 
-        this.transform.localPosition = new Vector3(Mathf.Cos(_t) * + 4.2f, 0.0f, Mathf.Sin(_t) * 4.2f);
+        this.transform.localPosition = new Vector3(Mathf.Cos(_t) * + 4.15f, 0.0f, Mathf.Sin(_t) * 4.15f);
 
 
         var redLight = this.transform.FindChild("RedLight").GetComponent<Light>().intensity = Mathf.Cos(_l * 10);
