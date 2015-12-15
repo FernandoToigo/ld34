@@ -126,7 +126,7 @@ public class SignalSource : MonoBehaviour
 
         var size = (_signal.TotalData / Signal.MAX_DATA) * 0.05f;
         lineRenderer.SetWidth(size, size);
-        lineRenderer.material.color = _signal.Color;
+        lineRenderer.material.SetColor("_EmissionColor", _signal.Color);
 
         reflection.transform.parent = gameObject.transform;
         _reflections.Add(reflection);
