@@ -24,7 +24,7 @@ public class Satelite : MonoBehaviour {
     {
         _angleThing = GetComponent<AngleThing>();
 
-        this.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -90.0f);
+        //this.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, -90.0f);
 
         _rightTurbineThrusterAnimation = this.transform.FindChild("RightTurbine").GetComponent<ParticleSystem>();
         _rightTurbineThrusterAnimation.Stop();
@@ -46,6 +46,8 @@ public class Satelite : MonoBehaviour {
     {
         if (OnMenu)
             return;
+
+        //return;
 
         bool leftArrowPressed = Input.GetKey(KeyCode.LeftArrow);
         bool rightArrowPressed = Input.GetKey(KeyCode.RightArrow);
@@ -116,7 +118,7 @@ public class Satelite : MonoBehaviour {
         //Debug.Log("r:  " + _rotationSpeed + "; t%:  " + _translationSpeed / _maxTraslationSpeed);
 
         var eulerZ = this.transform.localRotation.eulerAngles.z;
-        this.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, eulerZ + _rotationSpeed);
+        this.transform.localRotation = Quaternion.Euler(0.0f, 180.0f, eulerZ + _rotationSpeed);
 
         _angleThing.Angle += Time.deltaTime * _translationSpeed;
         this.transform.position = _angleThing.Direction * 6.0f;

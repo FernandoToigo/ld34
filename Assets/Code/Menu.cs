@@ -49,18 +49,17 @@ public class Menu : MonoBehaviour
                         leftTurbineSound.Play();
 
                     _animator.Animate(
-                        new FloatAnimation(0, 50, 6000, a => {
+                        new FloatAnimation(0, 50, 6100, a => {
 
                             this.transform.localPosition = new Vector3(0.0f, 0.0f, -a);
                         }, () =>
                         {
                             var sat = GameObject.Find("Satellite");
                             sat.GetComponent<Animator>().SetBool("SatelliteGo", false);
-                            sat.GetComponent<Animator>().enabled = false;
+                            sat.GetComponent<Animator>().Stop();// = false;
                             sat.transform.localPosition = new Vector3(6.0f, 0.0f, 0.0f);
-                            sat.transform.localRotation = Quaternion.Euler(0, -540, 180);
-                            sat.GetComponent<Satelite>().OnMenu = false;
-                            onMenu = false;
+                            //sat.transform.localRotation = Quaternion.Euler(360, 180, 180);
+                            
 
                             rightTurbineParticle.Stop();
                             rightTurbineSound.Stop();
@@ -79,6 +78,9 @@ public class Menu : MonoBehaviour
                             },
                             () =>
                             {
+                                sat.GetComponent<Satelite>().OnMenu = false;
+                                onMenu = false;
+
                                 var levelControl = GameObject.Find("LevelControl").GetComponent<LevelControl>();
 
                                 DataLog.LogStatic("system initialized...", DataLog.SUCCESS_COLOR);
@@ -107,7 +109,7 @@ public class Menu : MonoBehaviour
                         },
                         FloatAnimation.EaseOutQuint));
 
-
+                        this.gameObject.SetActive(false);
                 },
                 ()=> { Application.Quit(); },
             };
@@ -140,10 +142,11 @@ public class Menu : MonoBehaviour
         if (Executed)
             return;
 
-        bool leftArrowPressed = Input.GetKey(KeyCode.LeftArrow);
-        bool rightArrowPressed = Input.GetKey(KeyCode.RightArrow);
+        bool leftArrowPressed = Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.UpArrow);
+        bool rightArrowPressed = Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.DownArrow);
+        bool enterPressed = Input.GetKeyDown(KeyCode.Return);
 
-        if (leftArrowPressed && rightArrowPressed)
+        if ((leftArrowPressed && rightArrowPressed) || enterPressed )
         {
             _actions[_selectedIndex]();
             Executed = true;
