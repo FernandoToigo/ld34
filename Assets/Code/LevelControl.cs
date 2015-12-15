@@ -308,7 +308,7 @@ public class LevelControl : MonoBehaviour
                                 _animator.Animate(
                                     new FloatAnimation(25, 0, 3000, a =>
                                     {
-                                        menu.transform.localPosition = new Vector3(0.0f, 0.0f, -a);
+                                        menu.transform.localPosition = new Vector3(0.0f, 0.5f, -a);
                                     }, () =>
                                     {
                                         GameObject.Find("Menu").GetComponent<Menu>().onMenu = true;

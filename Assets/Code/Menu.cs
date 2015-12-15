@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
-
+    public AudioClip ChangeOption;
+    public AudioClip AcceptOption;
     public Material SelectedMaterial;
     public Material Material;
 
@@ -24,6 +25,7 @@ public class Menu : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        UnityEngine.Cursor.visible = false;
         playButton = this.transform.FindChild("PlayButton").gameObject;
         instructionsButton = this.transform.FindChild("InstructionsButton").gameObject;
         creditsButton = this.transform.FindChild("CreditsButton").gameObject;
@@ -59,7 +61,7 @@ public class Menu : MonoBehaviour
                     _animator.Animate(
                         new FloatAnimation(0, 25, 6300, a => {
 
-                            this.transform.localPosition = new Vector3(0.0f, 0.0f, -a);
+                            this.transform.localPosition = new Vector3(0.0f, 0.5f, -a);
                         }, () =>
                         {
                             var sat = GameObject.Find("Satellite");
@@ -182,17 +184,30 @@ public class Menu : MonoBehaviour
 
         if ((leftArrowPressed && rightArrowPressed) || enterPressed )
         {
+            var audio = this.GetComponent<AudioSource>();
+            audio.clip = AcceptOption;
+            if (!audio.isPlaying)
+                audio.Play();
+
             _actions[_selectedIndex]();
             Executed = true;
+
+            _lastPressed = _delay;
         }
         else if (leftArrowPressed)
         {
             if (_lastPressed < 0.0f)
             {
+                var audio = this.GetComponent<AudioSource>();
+                audio.clip = ChangeOption;
+                if (!audio.isPlaying)
+                    audio.Play();
+
                 _selectedIndex--;
                 if (_selectedIndex < 0)
+                {
                     _selectedIndex = 3;
-
+                }
                 _lastPressed = _delay;
             }
             else
@@ -203,6 +218,12 @@ public class Menu : MonoBehaviour
             if (_lastPressed < 0.0f)
             {
                 _selectedIndex++;
+                
+                var audio = this.GetComponent<AudioSource>();
+                audio.clip = ChangeOption;
+                if (!audio.isPlaying)
+                    audio.Play();
+
                 if (_selectedIndex > 3)
                     _selectedIndex = 0;
 
@@ -212,10 +233,6 @@ public class Menu : MonoBehaviour
             {
                 _lastPressed -= Time.deltaTime;
             }
-        }
-        else
-        {
-            _lastPressed = _delay;
         }
 
         playButton.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = Material;
