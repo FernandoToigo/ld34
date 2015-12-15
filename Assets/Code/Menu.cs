@@ -10,6 +10,7 @@ public class Menu : MonoBehaviour
     public Material Material;
 
     GameObject playButton;
+    GameObject instructionsButton;
     GameObject creditsButton;
     GameObject exitButton;
 
@@ -22,6 +23,7 @@ public class Menu : MonoBehaviour
     void Start()
     {
         playButton = this.transform.FindChild("PlayButton").gameObject;
+        instructionsButton = this.transform.FindChild("InstructionsButton").gameObject;
         creditsButton = this.transform.FindChild("CreditsButton").gameObject;
         exitButton = this.transform.FindChild("ExitButton").gameObject;
 
@@ -29,7 +31,8 @@ public class Menu : MonoBehaviour
 
         _actions = new Action[]
             {
-                ()=> {
+                ()=> 
+                {
                     GameObject.Find("Satellite").GetComponent<Animator>().SetBool("SatelliteGo", true);
 
                     var leftTurbineParticle = GameObject.Find("Satellite").transform.FindChild("LeftTurbine").GetComponent<ParticleSystem>();
@@ -89,6 +92,27 @@ public class Menu : MonoBehaviour
                             FloatAnimation.EaseOutQuint));
                         }));
                 },
+                ()=>
+                {
+                    var fadePanel = GameObject.Find("Canvas").transform.FindChild("Fade").GetComponent<Image>();
+
+                        _animator.Animate(new FloatAnimation(
+                        0.0f,
+                        0.87f,
+                        3000,
+                        alpha =>
+                        {
+                            fadePanel.color = new Color(0.0f, 0.0f, 0.0f, alpha);
+                        },
+                        () =>
+                        {
+                            var levelControl = GameObject.Find("LevelControl").GetComponent<LevelControl>();
+                            levelControl.ShowInstructions();
+                        },
+                        FloatAnimation.EaseOutQuint));
+
+                        //this.gameObject.SetActive(false);
+                },
                 ()=> {
 
                         var fadePanel = GameObject.Find("Canvas").transform.FindChild("Fade").GetComponent<Image>();
@@ -108,19 +132,24 @@ public class Menu : MonoBehaviour
                         },
                         FloatAnimation.EaseOutQuint));
 
-                        this.gameObject.SetActive(false);
+                        //this.gameObject.SetActive(false);
                 },
-                ()=> { Application.Quit(); },
+                ()=> 
+                {
+                    Application.Quit();
+                },
             };
 
         _buttons = new GameObject[]
             {
                 playButton,
+                instructionsButton,
                 creditsButton,
                 exitButton
             };
 
         playButton.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = Material;
+        instructionsButton.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = Material;
         creditsButton.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = Material;
         exitButton.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = Material;
     }
@@ -156,7 +185,7 @@ public class Menu : MonoBehaviour
             {
                 _selectedIndex--;
                 if (_selectedIndex < 0)
-                    _selectedIndex = 2;
+                    _selectedIndex = 3;
 
                 _lastPressed = _delay;
             }
@@ -168,7 +197,7 @@ public class Menu : MonoBehaviour
             if (_lastPressed < 0.0f)
             {
                 _selectedIndex++;
-                if (_selectedIndex > 2)
+                if (_selectedIndex > 3)
                     _selectedIndex = 0;
 
                 _lastPressed = _delay;
@@ -186,6 +215,7 @@ public class Menu : MonoBehaviour
         playButton.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = Material;
         creditsButton.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = Material;
         exitButton.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = Material;
+        instructionsButton.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = Material;
 
         var selected = _buttons[_selectedIndex];
         selected.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = SelectedMaterial;

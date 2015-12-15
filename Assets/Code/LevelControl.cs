@@ -320,6 +320,64 @@ public class LevelControl : MonoBehaviour
                     }));
     }
 
+
+    public void ShowInstructions()
+    {
+        var text = "Instructions\n\nTheme chosen: Two buttons.\n\nYou are Major Tom, the controller of a satellite\nresponsible for sending messages across the world.\nYour objective is to send messages\nfrom the source antena to the target antena,\nby reflecting the signal and mantaining it for a certaing time.\nThe game has 6 levels, each one with increasing difficulty.\nTry to beat them all!\n\nControls\n\nleft = rotate satellite\nright = rotate satellite\nleft + right = impulse satellite";
+        var colors = new List<CommandTextWriter.ColorIndex>
+        {
+            new CommandTextWriter.ColorIndex("6EFF6EFF", 0, 12),
+            new CommandTextWriter.ColorIndex("6EFF6EFF", 369, 8),
+            new CommandTextWriter.ColorIndex("6EFF6EFF", 379, 4),
+            new CommandTextWriter.ColorIndex("6EFF6EFF", 403, 5),
+            new CommandTextWriter.ColorIndex("6EFF6EFF", 428, 12)
+        };
+        _writer.WriteText(text, _levelText, colors, new List<CommandTextWriter.SizeIndex>());
+
+        _animator.Animate(new FloatAnimation(
+                    0.0f,
+                    0.0f,
+                    40000,
+                    alpha =>
+                    {
+                    },
+                    () =>
+                    {
+                        _levelText.text = "";
+                        _writer.StopWriting();
+
+                        _animator.Animate(new FloatAnimation(
+                        0.87f,
+                        0.0f,
+                        3000,
+                        alpha =>
+                        {
+                            _fadePanel.color = new Color(0.0f, 0.0f, 0.0f, alpha);
+                            //_levelText.color = new Color(_levelText.color.r, _levelText.color.g, _levelText.color.b, alpha);
+                            //_levelText.text = string.Format(_levelText.text, ((int)(alpha * 255.0f)).ToString("X").PadLeft(2, '0'));
+                        },
+                        () =>
+                        {
+                            GameObject.Find("Menu").GetComponent<Menu>().Executed = false;
+
+                            //if (!fromMenu)
+                            //{
+                            //    var menu = GameObject.Find("Menu");
+                            //    _animator.Animate(
+                            //        new FloatAnimation(25, 0, 3000, a =>
+                            //        {
+                            //            menu.transform.localPosition = new Vector3(0.0f, 0.0f, -a);
+                            //        }, () =>
+                            //        {
+                            //            GameObject.Find("Menu").GetComponent<Menu>().onMenu = true;
+                            //        }
+                            //        , FloatAnimation.EaseInOutQuint));
+                            //}
+                        },
+                        FloatAnimation.EaseInOutQuint));
+                    }));
+    }
+
     public void ShowDeath()
     {
         SignalCreator.CancelAllSignals();
