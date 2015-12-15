@@ -14,6 +14,11 @@ public class LifesText : MonoBehaviour
 
     void Update()
     {
+        if (LevelControl.CurrentLevel == null)
+        {
+            _text.text = "";
+            return;
+        }
         //var stringBuilder = new StringBuilder();
 
         //for (int i = 0; i < LevelControl.Lifes; i++)

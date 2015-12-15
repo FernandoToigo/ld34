@@ -27,6 +27,14 @@ public class LevelControl : MonoBehaviour
         set { _dataTransmitted = value; }
     }
 
+    public List<Level> Levels
+    {
+        get
+        {
+            return _levels;
+        }
+    }
+
     private Image _fadePanel;
     private Text _levelText;
     private CommandTextWriter _writer;
@@ -46,7 +54,7 @@ public class LevelControl : MonoBehaviour
         _levelText = _fadePanel.transform.FindChild("LevelText").GetComponent<Text>();
         _writer = GetComponent<CommandTextWriter>();
         InitializeLevels();
-        StartLevel(_levels[0]);
+        //StartLevel(_levels[0]);
     }
 
     private void InitializeLevels()
@@ -108,6 +116,9 @@ public class LevelControl : MonoBehaviour
     {
         _animator.Update();
 
+        if (_currentLevel == null)
+            return;
+
         if (!_deathing && LevelControl.Lifes <= 0)
         {
             ShowDeath();
@@ -155,11 +166,11 @@ public class LevelControl : MonoBehaviour
                 if (_timer <= 0.0f)
                 {
                     _ending = false;
-                    var nextIndex = _levels.IndexOf(_currentLevel) + 1;
-                    if (nextIndex >= _levels.Count)
+                    var nextIndex = Levels.IndexOf(_currentLevel) + 1;
+                    if (nextIndex >= Levels.Count)
                         EndGame();
                     else
-                        StartLevel(_levels[nextIndex]);
+                        StartLevel(Levels[nextIndex]);
                 }
             }
         }
@@ -178,7 +189,7 @@ public class LevelControl : MonoBehaviour
         }
     }
 
-    void StartLevel(Level level)
+    public void StartLevel(Level level)
     {
         _dataTransmitted = 0.0f;
         _lifes = MAX_LIFES;
@@ -248,11 +259,11 @@ public class LevelControl : MonoBehaviour
             },
             () =>
             {
-                ShowCredits();
+                ShowCredits(false);
             }));
     }
-
-    public void ShowCredits()
+    
+    public void ShowCredits(bool fromMenu)
     {
         var text = "Credits\n\nFernando Molon Toigo - Programmer\nFilipe Scur - Programmer/Artist\n\n\"Peace of Mind\" Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 3.0\nhttp://creativecommons.org/licenses/by/3.0/\n\n\nThank you for playing!";
         var colors = new List<CommandTextWriter.ColorIndex>
@@ -264,6 +275,38 @@ public class LevelControl : MonoBehaviour
             new CommandTextWriter.ColorIndex("6EFF6EFF", text.Length - 23, 23)
         };
         _writer.WriteText(text, _levelText, colors, new List<CommandTextWriter.SizeIndex>());
+
+        if (fromMenu)
+        {
+            _animator.Animate(new FloatAnimation(
+                        0.0f,
+                        0.0f,
+                        25000,
+                        alpha =>
+                        {
+                        },
+                        () =>
+                        {
+                            _levelText.text = "";
+                            _writer.StopWriting();
+
+                            _animator.Animate(new FloatAnimation(
+                            0.87f,
+                            0.0f,
+                            3000,
+                            alpha =>
+                            {
+                                _fadePanel.color = new Color(0.0f, 0.0f, 0.0f, alpha);
+                                //_levelText.color = new Color(_levelText.color.r, _levelText.color.g, _levelText.color.b, alpha);
+                                //_levelText.text = string.Format(_levelText.text, ((int)(alpha * 255.0f)).ToString("X").PadLeft(2, '0'));
+                            },
+                            () =>
+                            {
+                                GameObject.Find("Menu").GetComponent<Menu>().Executed = false;
+                            },
+                            FloatAnimation.EaseInOutQuint));
+                        }));
+        }
     }
 
     public void ShowDeath()

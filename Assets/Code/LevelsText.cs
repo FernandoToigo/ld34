@@ -13,6 +13,9 @@ public class LevelsText : MonoBehaviour
 
     void Update()
     {
+        if (LevelControl.CurrentLevel == null)
+            return;
+
         _text.text = string.Format("Level {0}", LevelControl.CurrentLevel.Number);
     }
 }

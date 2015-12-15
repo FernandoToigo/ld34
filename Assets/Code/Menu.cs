@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
-public class Menu : MonoBehaviour {
+public class Menu : MonoBehaviour
+{
 
     public Material SelectedMaterial;
     public Material Material;
@@ -14,23 +16,99 @@ public class Menu : MonoBehaviour {
     GameObject[] _buttons;
 
     Action[] _actions;
+    FloatAnimator _animator;
+
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         playButton = this.transform.FindChild("PlayButton").gameObject;
         creditsButton = this.transform.FindChild("CreditsButton").gameObject;
         exitButton = this.transform.FindChild("ExitButton").gameObject;
 
+        _animator = new FloatAnimator();
+
         _actions = new Action[]
             {
                 ()=> {
-                    //GameObject.Find("Satellite").GetComponent<Animator>().SetBool("SatelliteGo", true);
-                    var animation = GameObject.Find("Satellite").GetComponent<Animation>();
+                    GameObject.Find("Satellite").GetComponent<Animator>().SetBool("SatelliteGo", true);
 
-                    animation["Intro0"].wrapMode = WrapMode.Once;
-                    animation.Play("Intro0");
+                    var leftTurbineParticle = GameObject.Find("Satellite").transform.FindChild("LeftTurbine").GetComponent<ParticleSystem>();
+                    var rightTurbineParticle = GameObject.Find("Satellite").transform.FindChild("RightTurbine").GetComponent<ParticleSystem>();
+                    var leftTurbineSound = GameObject.Find("Satellite").transform.FindChild("LeftTurbine").GetComponent<AudioSource>();
+                    var rightTurbineSound = GameObject.Find("Satellite").transform.FindChild("RightTurbine").GetComponent<AudioSource>();
+
+                    rightTurbineParticle.Play();
+
+                    if (!rightTurbineSound.isPlaying)
+                        rightTurbineSound.Play();
+
+                    leftTurbineParticle.Play();
+
+                    if (!leftTurbineSound.isPlaying)
+                        leftTurbineSound.Play();
+
+                    _animator.Animate(
+                        new FloatAnimation(0, 50, 6000, a => {
+
+                            this.transform.localPosition = new Vector3(0.0f, 0.0f, -a);
+                        }, () =>
+                        {
+                            var sat = GameObject.Find("Satellite");
+                            sat.GetComponent<Animator>().SetBool("SatelliteGo", false);
+                            sat.GetComponent<Animator>().enabled = false;
+                            sat.transform.localPosition = new Vector3(6.0f, 0.0f, 0.0f);
+                            sat.transform.localRotation = Quaternion.Euler(0, -540, 180);
+                            sat.GetComponent<Satelite>().OnMenu = false;
+                            onMenu = false;
+
+                            rightTurbineParticle.Stop();
+                            rightTurbineSound.Stop();
+                            leftTurbineParticle.Stop();
+                            leftTurbineSound.Stop();
+
+                            var fadePanel = GameObject.Find("Canvas").transform.FindChild("Fade").GetComponent<Image>();
+
+                            _animator.Animate(new FloatAnimation(
+                            0.0f,
+                            0.74f,
+                            3000,
+                            alpha =>
+                            {
+                                fadePanel.color = new Color(0.0f, 0.0f, 0.0f, alpha);
+                            },
+                            () =>
+                            {
+                                var levelControl = GameObject.Find("LevelControl").GetComponent<LevelControl>();
+
+                                DataLog.LogStatic("system initialized...", DataLog.SUCCESS_COLOR);
+                                levelControl.StartLevel(levelControl.Levels[0]);
+
+                            },
+                            FloatAnimation.EaseOutQuint));
+                        }));
                 },
-                ()=> { },
+                ()=> {
+
+                        var fadePanel = GameObject.Find("Canvas").transform.FindChild("Fade").GetComponent<Image>();
+
+                        _animator.Animate(new FloatAnimation(
+                        0.0f,
+                        0.87f,
+                        3000,
+                        alpha =>
+                        {
+                            fadePanel.color = new Color(0.0f, 0.0f, 0.0f, alpha);
+                        },
+                        () =>
+                        {
+                            var levelControl = GameObject.Find("LevelControl").GetComponent<LevelControl>();
+                            levelControl.ShowCredits(true);
+                        },
+                        FloatAnimation.EaseOutQuint));
+
+
+                },
                 ()=> { Application.Quit(); },
             };
 
@@ -47,18 +125,28 @@ public class Menu : MonoBehaviour {
     }
 
     int _selectedIndex = 0;
-
+    bool onMenu = true;
     float _lastPressed;
     float _delay = 0.05f;
-	// Update is called once per frame
-	void Update ()
+    public bool Executed = false;
+    // Update is called once per frame
+    void Update()
     {
+        _animator.Update();
+
+        if (!onMenu)
+            return;
+
+        if (Executed)
+            return;
+
         bool leftArrowPressed = Input.GetKey(KeyCode.LeftArrow);
         bool rightArrowPressed = Input.GetKey(KeyCode.RightArrow);
 
         if (leftArrowPressed && rightArrowPressed)
         {
             _actions[_selectedIndex]();
+            Executed = true;
         }
         else if (leftArrowPressed)
         {
@@ -92,7 +180,7 @@ public class Menu : MonoBehaviour {
         {
             _lastPressed = _delay;
         }
-        
+
         playButton.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = Material;
         creditsButton.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = Material;
         exitButton.transform.FindChild("Model").transform.FindChild("default").GetComponent<MeshRenderer>().material = Material;

@@ -19,7 +19,6 @@ public class DataLog : MonoBehaviour
     {
         _writer = GetComponent<CommandTextWriter>();
         _data = new List<Data>();
-        Log("system initialized...", DataLog.SUCCESS_COLOR);
     }
     
     public static void LogStatic(string value)
