@@ -262,7 +262,7 @@ public class LevelControl : MonoBehaviour
                 ShowCredits(false);
             }));
     }
-    
+
     public void ShowCredits(bool fromMenu)
     {
         var text = "Credits\n\nFernando Molon Toigo - Programmer\nFilipe Scur - Programmer/Artist\n\n\"Peace of Mind\" Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 3.0\nhttp://creativecommons.org/licenses/by/3.0/\n\n\nThank you for playing!";
@@ -276,37 +276,48 @@ public class LevelControl : MonoBehaviour
         };
         _writer.WriteText(text, _levelText, colors, new List<CommandTextWriter.SizeIndex>());
 
-        if (fromMenu)
-        {
-            _animator.Animate(new FloatAnimation(
+        _animator.Animate(new FloatAnimation(
+                    0.0f,
+                    0.0f,
+                    25000,
+                    alpha =>
+                    {
+                    },
+                    () =>
+                    {
+                        _levelText.text = "";
+                        _writer.StopWriting();
+
+                        _animator.Animate(new FloatAnimation(
+                        0.87f,
                         0.0f,
-                        0.0f,
-                        25000,
+                        3000,
                         alpha =>
                         {
-                        },
-                        () =>
-                        {
-                            _levelText.text = "";
-                            _writer.StopWriting();
-
-                            _animator.Animate(new FloatAnimation(
-                            0.87f,
-                            0.0f,
-                            3000,
-                            alpha =>
-                            {
-                                _fadePanel.color = new Color(0.0f, 0.0f, 0.0f, alpha);
+                            _fadePanel.color = new Color(0.0f, 0.0f, 0.0f, alpha);
                                 //_levelText.color = new Color(_levelText.color.r, _levelText.color.g, _levelText.color.b, alpha);
                                 //_levelText.text = string.Format(_levelText.text, ((int)(alpha * 255.0f)).ToString("X").PadLeft(2, '0'));
                             },
-                            () =>
+                        () =>
+                        {
+                            GameObject.Find("Menu").GetComponent<Menu>().Executed = false;
+
+                            if (!fromMenu)
                             {
-                                GameObject.Find("Menu").GetComponent<Menu>().Executed = false;
-                            },
-                            FloatAnimation.EaseInOutQuint));
-                        }));
-        }
+                                var menu = GameObject.Find("Menu");
+                                _animator.Animate(
+                                    new FloatAnimation(25, 0, 3000, a =>
+                                    {
+                                        menu.transform.localPosition = new Vector3(0.0f, 0.0f, -a);
+                                    }, () =>
+                                    {
+                                        GameObject.Find("Menu").GetComponent<Menu>().onMenu = true;
+                                    }
+                                    , FloatAnimation.EaseInOutQuint));
+                            }
+                        },
+                        FloatAnimation.EaseInOutQuint));
+                    }));
     }
 
     public void ShowDeath()
