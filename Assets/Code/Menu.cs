@@ -18,7 +18,6 @@ public class Menu : MonoBehaviour
     Action[] _actions;
     FloatAnimator _animator;
 
-
     // Use this for initialization
     void Start()
     {
@@ -49,7 +48,7 @@ public class Menu : MonoBehaviour
                         leftTurbineSound.Play();
 
                     _animator.Animate(
-                        new FloatAnimation(0, 50, 6300, a => {
+                        new FloatAnimation(0, 25, 6300, a => {
 
                             this.transform.localPosition = new Vector3(0.0f, 0.0f, -a);
                         }, () =>
@@ -127,7 +126,7 @@ public class Menu : MonoBehaviour
     }
 
     int _selectedIndex = 0;
-    bool onMenu = true;
+    public bool onMenu = true;
     float _lastPressed;
     float _delay = 0.05f;
     public bool Executed = false;
