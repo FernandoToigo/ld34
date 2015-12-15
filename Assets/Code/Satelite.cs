@@ -49,8 +49,8 @@ public class Satelite : MonoBehaviour {
 
         //return;
 
-        bool leftArrowPressed = Input.GetKey(KeyCode.LeftArrow);
-        bool rightArrowPressed = Input.GetKey(KeyCode.RightArrow);
+        bool leftArrowPressed = Input.GetKey(KeyCode.RightArrow);
+        bool rightArrowPressed = Input.GetKey(KeyCode.LeftArrow);
 
         var v0 = Vector3.Normalize(Vector3.Cross(-this.transform.position, new Vector3(0.0f, 0.0f, 1.0f)));
 
@@ -126,5 +126,11 @@ public class Satelite : MonoBehaviour {
         //Debug.DrawLine(this.transform.position, this.transform.position - this.transform.up * 1.0f, Color.cyan);
         //Debug.DrawLine(this.transform.position, new Vector3(), Color.magenta);
         //Debug.DrawLine(this.transform.position, this.transform.position - v0, Color.green);
+    }
+
+    public void AnimationEventa()
+    {
+        GetComponent<Animator>().SetBool("SatelliteGo", false);
+        GetComponent<Animator>().Stop();// = false;
     }
 }

@@ -51,11 +51,6 @@ AnimationClip:
         inSlope: {x: -0.0929689, y: -0.4614377, z: 0.33266914}
         outSlope: {x: -0.0929689, y: -0.4614377, z: 0.33266914}
         tangentMode: 0
-      - time: 6.5
-        value: {x: 0, y: -540, z: 180}
-        inSlope: {x: 0, y: 0, z: 0}
-        outSlope: {x: 0, y: 0, z: 0}
-        tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -104,11 +99,6 @@ AnimationClip:
         inSlope: {x: 0.079961866, y: -0.01886198, z: -0.020353502}
         outSlope: {x: 0.079961866, y: -0.01886198, z: -0.020353502}
         tangentMode: 0
-      - time: 6.5
-        value: {x: 6, y: 0, z: 0}
-        inSlope: {x: 0, y: 0, z: 0}
-        outSlope: {x: 0, y: 0, z: 0}
-        tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -141,7 +131,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 6.5
+    m_StopTime: 6
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -195,11 +185,6 @@ AnimationClip:
         inSlope: 0.079961866
         outSlope: 0.079961866
         tangentMode: 0
-      - time: 6.5
-        value: 6
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -244,11 +229,6 @@ AnimationClip:
         value: 0
         inSlope: -0.01886198
         outSlope: -0.01886198
-        tangentMode: 0
-      - time: 6.5
-        value: 0
-        inSlope: 0
-        outSlope: 0
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -295,11 +275,6 @@ AnimationClip:
         inSlope: -0.020353502
         outSlope: -0.020353502
         tangentMode: 0
-      - time: 6.5
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -344,11 +319,6 @@ AnimationClip:
         value: 0
         inSlope: -0.0929689
         outSlope: -0.0929689
-        tangentMode: 0
-      - time: 6.5
-        value: 0
-        inSlope: 0
-        outSlope: 0
         tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -395,11 +365,6 @@ AnimationClip:
         inSlope: -0.4614377
         outSlope: -0.4614377
         tangentMode: 0
-      - time: 6.5
-        value: -540
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -445,11 +410,6 @@ AnimationClip:
         inSlope: 0.33266914
         outSlope: 0.33266914
         tangentMode: 0
-      - time: 6.5
-        value: 180
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -491,4 +451,11 @@ AnimationClip:
   m_HasGenericRootTransform: 1
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 6
+    functionName: AnimationEventa
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

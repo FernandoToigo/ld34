@@ -49,15 +49,15 @@ public class Menu : MonoBehaviour
                         leftTurbineSound.Play();
 
                     _animator.Animate(
-                        new FloatAnimation(0, 50, 6100, a => {
+                        new FloatAnimation(0, 50, 6300, a => {
 
                             this.transform.localPosition = new Vector3(0.0f, 0.0f, -a);
                         }, () =>
                         {
                             var sat = GameObject.Find("Satellite");
-                            sat.GetComponent<Animator>().SetBool("SatelliteGo", false);
-                            sat.GetComponent<Animator>().Stop();// = false;
-                            sat.transform.localPosition = new Vector3(6.0f, 0.0f, 0.0f);
+                            //sat.GetComponent<Animator>().SetBool("SatelliteGo", false);
+                            //sat.GetComponent<Animator>().Stop();// = false;
+                            //sat.transform.localPosition = new Vector3(6.0f, 0.0f, 0.0f);
                             //sat.transform.localRotation = Quaternion.Euler(360, 180, 180);
                             
 
