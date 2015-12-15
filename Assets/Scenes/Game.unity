@@ -3335,7 +3335,7 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 875810408}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_Materials:
   - {fileID: 2100000, guid: cda32f357f93ca043b9416d43be69ea7, type: 2}
@@ -10377,6 +10377,14 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: cda32f357f93ca043b9416d43be69ea7, type: 2}
+    - target: {fileID: 2300000, guid: bf9653befea6d2f46beb84ce6fa5745b, type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: bf9653befea6d2f46beb84ce6fa5745b, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bf9653befea6d2f46beb84ce6fa5745b, type: 3}
   m_IsPrefabParent: 0
@@ -10557,7 +10565,7 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1542084819}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_Materials:
   - {fileID: 2100000, guid: cda32f357f93ca043b9416d43be69ea7, type: 2}
@@ -14078,6 +14086,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedMaterial: {fileID: 2100000, guid: 4264826eb9eb30143a1e84bafaac6ac0, type: 2}
   Material: {fileID: 2100000, guid: cda32f357f93ca043b9416d43be69ea7, type: 2}
+  onMenu: 1
   Executed: 0
 --- !u!4 &1878599599
 Transform:
@@ -14461,7 +14470,7 @@ MeshRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1974776761}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_Materials:
   - {fileID: 2100000, guid: cda32f357f93ca043b9416d43be69ea7, type: 2}

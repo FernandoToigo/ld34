@@ -18,6 +18,8 @@ public class Menu : MonoBehaviour
     Action[] _actions;
     FloatAnimator _animator;
 
+    private bool _firstPlay = true;
+
     // Use this for initialization
     void Start()
     {
@@ -30,7 +32,11 @@ public class Menu : MonoBehaviour
         _actions = new Action[]
             {
                 ()=> {
-                    GameObject.Find("Satellite").GetComponent<Animator>().SetBool("SatelliteGo", true);
+                    if (_firstPlay)
+                    {
+                        GameObject.Find("Satellite").GetComponent<Animator>().SetBool("SatelliteGo", true);
+                        _firstPlay = false;
+                    }
 
                     var leftTurbineParticle = GameObject.Find("Satellite").transform.FindChild("LeftTurbine").GetComponent<ParticleSystem>();
                     var rightTurbineParticle = GameObject.Find("Satellite").transform.FindChild("RightTurbine").GetComponent<ParticleSystem>();
