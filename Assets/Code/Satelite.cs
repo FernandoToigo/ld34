@@ -3,13 +3,13 @@ using System.Collections;
 
 public class Satelite : MonoBehaviour {
 
-    float RotationSpeedIncrement = 0.5f;
+    float RotationSpeedIncrement = 25.0f;
     float TranslationSpeedIncrement = 0.005f;
 
     float _rotationSpeed = 0.0f;
     float _translationSpeed = 0.01f;
     float _maxTraslationSpeed = 1.0f;
-    float _maxRotationSpeed = 5.0f;
+    float _maxRotationSpeed = 150.0f;
     
     ParticleSystem _rightTurbineThrusterAnimation;
     ParticleSystem _leftTurbineThrusterAnimation;
@@ -55,7 +55,7 @@ public class Satelite : MonoBehaviour {
         var v0 = Vector3.Normalize(Vector3.Cross(-this.transform.position, new Vector3(0.0f, 0.0f, 1.0f)));
 
         var percentTranslation = Mathf.Abs(_translationSpeed) / _maxTraslationSpeed;
-        var trueRotationSpeed = RotationSpeedIncrement + percentTranslation;
+        var trueRotationSpeed = RotationSpeedIncrement + percentTranslation * 50.0f;
 
         if (leftArrowPressed && rightArrowPressed)
         {
@@ -117,8 +117,9 @@ public class Satelite : MonoBehaviour {
 
         //Debug.Log("r:  " + _rotationSpeed + "; t%:  " + _translationSpeed / _maxTraslationSpeed);
 
+        Debug.Log(_rotationSpeed);
         var eulerZ = this.transform.localRotation.eulerAngles.z;
-        this.transform.localRotation = Quaternion.Euler(0.0f, 180.0f, eulerZ + _rotationSpeed);
+        this.transform.localRotation = Quaternion.Euler(0.0f, 180.0f, eulerZ + _rotationSpeed * Time.deltaTime);
 
         _angleThing.Angle += Time.deltaTime * _translationSpeed;
         this.transform.position = _angleThing.Direction * 6.0f;
