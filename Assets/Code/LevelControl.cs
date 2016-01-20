@@ -40,6 +40,7 @@ public class LevelControl : MonoBehaviour
     private CommandTextWriter _writer;
     private List<Level> _levels;
     private FloatAnimator _animator;
+    private Satelite _satellite;
 
     private float _timer = 0.0f;
     private bool _starting = false;
@@ -53,6 +54,7 @@ public class LevelControl : MonoBehaviour
         _fadePanel = GameObject.Find("Canvas").transform.FindChild("Fade").GetComponent<Image>();
         _levelText = _fadePanel.transform.FindChild("LevelText").GetComponent<Text>();
         _writer = GetComponent<CommandTextWriter>();
+        _satellite = GameObject.Find("Satellite").GetComponent<Satelite>();
         InitializeLevels();
         //StartLevel(_levels[0]);
     }
@@ -119,9 +121,13 @@ public class LevelControl : MonoBehaviour
         if (_currentLevel == null)
             return;
 
-        if (!_deathing && LevelControl.Lifes <= 0)
+        if (!_deathing)
         {
-            ShowDeath();
+            if (_lifes <= 0)
+                ShowDeath("too many timeouts");
+
+            if (_satellite.Fuel <= 0.0f)
+                ShowDeath("out of fuel");
         }
 
         if (!_ending && _dataTransmitted >= _currentLevel.TotalData)
@@ -193,6 +199,7 @@ public class LevelControl : MonoBehaviour
     {
         _dataTransmitted = 0.0f;
         _lifes = MAX_LIFES;
+        _satellite.Fuel = 1.0f;
         _currentLevel = level;
         var text = string.Format("Level {0} - Transmit a total of {1} gigabytes", level.Number.ToString(), level.TotalData.ToString("0.#"));
         var colors = new List<CommandTextWriter.ColorIndex>
@@ -320,7 +327,6 @@ public class LevelControl : MonoBehaviour
                     }));
     }
 
-
     public void ShowInstructions()
     {
         var text = "Instructions\n\nTheme chosen: Two buttons.\n\nYou are Major Tom, the controller of a satellite\nresponsible for sending messages across the world.\nYour objective is to send messages\nfrom the source antena to the target antena,\nby reflecting the signal and mantaining it for a certaing time.\nThe game has 6 levels, each one with increasing difficulty.\nTry to beat them all!\n\nControls\n\nleft = rotate satellite\nright = rotate satellite\nleft + right = impulse satellite";
@@ -378,7 +384,7 @@ public class LevelControl : MonoBehaviour
                     }));
     }
 
-    public void ShowDeath()
+    public void ShowDeath(string message)
     {
         SignalCreator.CancelAllSignals();
         SignalCreator.CreateSignals = false;
@@ -394,7 +400,7 @@ public class LevelControl : MonoBehaviour
             },
             () =>
             {
-                var text = "too many timeouts";
+                var text = message;
                 var colors = new List<CommandTextWriter.ColorIndex>
                 {
                     new CommandTextWriter.ColorIndex("FF6E6EFF", 0, text.Length)

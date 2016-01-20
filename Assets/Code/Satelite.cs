@@ -1,16 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Satelite : MonoBehaviour {
+public class Satelite : MonoBehaviour
+{
+    private const float FUEL_PER_SECOND = 0.01f;
 
     float RotationSpeedIncrement = 25.0f;
     float TranslationSpeedIncrement = 0.005f;
+
+    private float _fuel;
+    public float Fuel
+    {
+        get { return _fuel; }
+        set { _fuel = value; }
+    }
 
     float _rotationSpeed = 0.0f;
     float _translationSpeed = 0.01f;
     float _maxTraslationSpeed = 1.0f;
     float _maxRotationSpeed = 150.0f;
-    
+
     ParticleSystem _rightTurbineThrusterAnimation;
     ParticleSystem _leftTurbineThrusterAnimation;
     AudioSource _leftTurbineThrusterSound;
@@ -39,6 +48,8 @@ public class Satelite : MonoBehaviour {
         _leftTurbineThrusterSound = this.transform.FindChild("LeftTurbine").GetComponent<AudioSource>();
         _leftTurbineThrusterSound.loop = true;
         _leftTurbineThrusterSound.Stop();
+
+        _fuel = 1.0f;
     }
 
     // Update is called once per frame
@@ -57,11 +68,14 @@ public class Satelite : MonoBehaviour {
         var percentTranslation = Mathf.Abs(_translationSpeed) / _maxTraslationSpeed;
         var trueRotationSpeed = RotationSpeedIncrement + percentTranslation * 50.0f;
 
-        if (leftArrowPressed && rightArrowPressed)
+        if (leftArrowPressed && rightArrowPressed && _fuel > 0.0f)
         {
             //RotationSpeedIncrement = 0.00f;
             TranslationSpeedIncrement += 0.005f * Time.deltaTime;
             _rightTurbineThrusterAnimation.Play();
+
+            _fuel = Mathf.Max(0.0f, _fuel - FUEL_PER_SECOND * Time.deltaTime);
+            _fuel = Mathf.Max(0.0f, _fuel - FUEL_PER_SECOND * Time.deltaTime);
 
             if (!_rightTurbineThrusterSound.isPlaying)
                 _rightTurbineThrusterSound.Play();
@@ -71,12 +85,13 @@ public class Satelite : MonoBehaviour {
             if (!_leftTurbineThrusterSound.isPlaying)
                 _leftTurbineThrusterSound.Play();
         }
-        else if (leftArrowPressed)
+        else if (leftArrowPressed && _fuel > 0.0f)
         {
             TranslationSpeedIncrement = 0.0f;
             _rotationSpeed = Mathf.Clamp(_rotationSpeed + trueRotationSpeed * Time.deltaTime, -_maxRotationSpeed, _maxRotationSpeed);
             //RotationSpeedIncrement += 0.015f * Time.deltaTime;
             _leftTurbineThrusterAnimation.Play();
+            _fuel = Mathf.Max(0.0f, _fuel - FUEL_PER_SECOND * Time.deltaTime);
 
             if (!_leftTurbineThrusterSound.isPlaying)
                 _leftTurbineThrusterSound.Play();
@@ -84,13 +99,14 @@ public class Satelite : MonoBehaviour {
             _rightTurbineThrusterAnimation.Stop();
             _rightTurbineThrusterSound.Stop();
         }
-        else if (rightArrowPressed)
+        else if (rightArrowPressed && _fuel > 0.0f)
         {
             TranslationSpeedIncrement = 0.0f;
             //RotationSpeedIncrement -= 0.015f * Time.deltaTime;
             _rotationSpeed = Mathf.Clamp(_rotationSpeed - trueRotationSpeed * Time.deltaTime, -_maxRotationSpeed, _maxRotationSpeed);
 
             _rightTurbineThrusterAnimation.Play();
+            _fuel = Mathf.Max(0.0f, _fuel - FUEL_PER_SECOND * Time.deltaTime);
 
             if (!_rightTurbineThrusterSound.isPlaying)
                 _rightTurbineThrusterSound.Play();
